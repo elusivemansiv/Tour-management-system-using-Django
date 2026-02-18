@@ -1,44 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ location.name }} Packages</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% extends "packages/base.html" %}
 
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand" href="/">TourPackage</a>
-    </div>
-</nav>
+{% block title %}{{ location.name }} Packages | Tour Hobe{% endblock %}
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">
+{% block content %}
+
+<section class="max-w-[1440px] mx-auto px-6 py-14">
+
+    <h2 class="text-3xl font-bold text-center mb-10">
         Packages in {{ location.name }}
     </h2>
 
-    <div class="row">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
         {% for package in packages %}
-        <div class="col-md-4">
-            <div class="card mb-4">
-                {% if package.image %}
-                <img src="{{ package.image.url }}" class="card-img-top">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ package.title }}</h5>
-                    <p class="card-text">
-                        {{ package.duration }} <br>
-                        Price: {{ package.price }}TK
-                    </p>
-                    <a href="#" class="btn btn-success">View Details</a>
-                </div>
+        <div class="bg-white border rounded-xl overflow-hidden hover:shadow-xl transition">
+
+            {% if package.image %}
+            <img src="{{ package.image.url }}" alt="{{ package.title }}" class="h-56 w-full object-cover">
+            {% endif %}
+
+            <div class="p-5">
+                <h3 class="text-xl font-bold mb-2">
+                    {{ package.title }}
+                </h3>
+
+                <p class="text-sm text-slate-600 mb-4">
+                    Duration: {{ package.duration }} <br>
+                    Price: <span class="font-semibold">{{ package.price }} TK</span>
+                </p>
+
+                <a href="#"
+                    class="inline-block bg-green-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-600 transition">
+                    View Details
+                </a>
             </div>
         </div>
-        {% empty %}
-        <p class="text-center">No packages available for this location.</p>
-        {% endfor %}
-    </div>
-</div>
 
-</body>
-</html>
+        {% empty %}
+        <p class="col-span-full text-center text-slate-500">
+            No packages available for this location.
+        </p>
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
