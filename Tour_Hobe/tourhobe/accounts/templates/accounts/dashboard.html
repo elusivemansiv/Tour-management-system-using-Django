@@ -1,0 +1,113 @@
+{% extends "packages/base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="max-w-[1200px] mx-auto px-6 py-10">
+
+    <!-- Welcome Section -->
+    <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl p-8 shadow-lg mb-10">
+        <h1 class="text-3xl font-bold mb-2">
+            Welcome back, {{ request.user.username }} 👋
+        </h1>
+        <p class="text-sm opacity-90">
+            Manage your bookings and explore new destinations.
+        </p>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="grid md:grid-cols-3 gap-6 mb-10">
+
+        <div class="bg-white rounded-2xl shadow-md p-6 border">
+            <p class="text-sm text-slate-500">Total Bookings</p>
+            <h2 class="text-3xl font-bold mt-2">{{ bookings|length }}</h2>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6 border">
+            <p class="text-sm text-slate-500">Pending</p>
+            <h2 class="text-3xl font-bold mt-2 text-yellow-500">
+                {{ bookings|dictsort:"status"|length }}
+            </h2>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6 border">
+            <p class="text-sm text-slate-500">Approved</p>
+            <h2 class="text-3xl font-bold mt-2 text-green-500">
+                {{ bookings|length }}
+            </h2>
+        </div>
+
+    </div>
+
+    <!-- Booking Table -->
+    <div class="bg-white rounded-2xl shadow-md border overflow-hidden">
+
+        <div class="p-6 border-b">
+            <h3 class="text-lg font-semibold">My Bookings</h3>
+        </div>
+
+        {% if bookings %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-50 text-slate-600 uppercase text-xs">
+                    <tr>
+                        <th class="px-6 py-4">Package</th>
+                        <th class="px-6 py-4">Booking Date</th>
+                        <th class="px-6 py-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+
+                    {% for booking in bookings %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-6 py-4 font-medium">
+                            {{ booking.package.name }}
+                        </td>
+
+                        <td class="px-6 py-4 text-slate-500">
+                            {{ booking.created_at|date:"d M Y" }}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {% if booking.status == "Pending" %}
+                            <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
+                                Pending
+                            </span>
+                            {% elif booking.status == "Approved" %}
+                            <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
+                                Approved
+                            </span>
+                            {% elif booking.status == "Cancelled" %}
+                            <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-700">
+                                Cancelled
+                            </span>
+                            {% else %}
+                            <span class="px-3 py-1 text-xs rounded-full bg-slate-100 text-slate-700">
+                                {{ booking.status }}
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+
+        <!-- Empty State -->
+        <div class="p-10 text-center">
+            <p class="text-slate-500 mb-4">You have no bookings yet.</p>
+            <a href="{% url 'package_list' %}"
+                class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition">
+                Explore Packages
+            </a>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

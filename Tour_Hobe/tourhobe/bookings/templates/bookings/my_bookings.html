@@ -1,0 +1,28 @@
+{% extends "packages/base.html" %}
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-16">
+    <h2 class="text-2xl font-bold mb-6">My Bookings</h2>
+
+    <table class="w-full border">
+        <tr class="bg-slate-100">
+            <th class="p-2">Package</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+
+        {% for booking in bookings %}
+        <tr class="border-t">
+            <td class="p-2">{{ booking.package.title }}</td>
+            <td>{{ booking.status }}</td>
+            <td>{{ booking.travel_date }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3" class="p-4 text-center">No bookings yet</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
