@@ -4,43 +4,63 @@
 
 {% block content %}
 
-<section class="max-w-[1440px] mx-auto px-6 py-14">
+<section class="max-w-7xl mx-auto px-6 py-16">
 
-    <h2 class="text-3xl font-bold text-center mb-10">
-        Packages in {{ location.name }}
+    <h2 class="text-4xl font-extrabold text-center mb-4">
+        {{ location.name }} Tour Packages
     </h2>
+    <p class="text-center text-slate-500 mb-14">
+        Choose the perfect package for your next adventure
+    </p>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
 
         {% for package in packages %}
-        <div class="bg-white border rounded-xl overflow-hidden hover:shadow-xl transition">
+        <div
+            class="bg-white rounded-2xl overflow-hidden shadow-soft border border-slate-100 group hover:shadow-xl transition">
 
-            {% if package.image %}
-            <img src="{{ package.image.url }}" alt="{{ package.title }}" class="h-56 w-full object-cover">
-            {% endif %}
-
-            <div class="p-5">
-                <h3 class="text-xl font-bold mb-2">
-                    {{ package.title }}
-                </h3>
-
-                <p class="text-sm text-slate-600 mb-4">
-                    Duration: {{ package.duration }} <br>
-                    Price: <span class="font-semibold">{{ package.price }} TK</span>
-                </p>
-
-                <a href="#"
-                    class="inline-block bg-green-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-600 transition">
-                    View Details
-                </a>
-
-                <a href="{% url 'book_package' package.id %}"
-                    class="inline-block bg-green-500 text-white px-5 py-2 rounded-lg font-semibold hover:bg-green-600 transition">
-                    Book Now
-                </a>
+            <!-- IMAGE -->
+            <div class="h-64 overflow-hidden">
+                {% if package.image %}
+                <img src="{{ package.image.url }}"
+                     alt="{{ package.title }}"
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                {% endif %}
             </div>
-        </div>
 
+            <!-- CONTENT -->
+            <div class="p-8">
+                <h4 class="text-2xl font-bold mb-4">
+                    {{ package.title }}
+                </h4>
+
+                <div class="space-y-1 mb-8">
+                    <p class="text-slate-500 text-sm">
+                        Duration: {{ package.duration }}
+                    </p>
+                    <p class="text-slate-500 text-sm">
+                        Price:
+                        <span class="text-green-600 font-bold">
+                            {{ package.price }} TK
+                        </span>
+                    </p>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="flex gap-4">
+                    <a href="{% url 'package_detail' package.id %}"
+                       class="flex-1 py-3 bg-green-100 text-green-700 font-bold rounded-xl text-sm text-center hover:bg-green-600 hover:text-white transition">
+                        View Details
+                    </a>
+
+                    <a href="{% url 'book_package' package.id %}"
+                       class="flex-1 py-3 bg-green-600 text-white font-bold rounded-xl text-sm text-center hover:bg-green-700 transition shadow-lg shadow-green-200">
+                        Book Now
+                    </a>
+                </div>
+            </div>
+
+        </div>
         {% empty %}
         <p class="col-span-full text-center text-slate-500">
             No packages available for this location.

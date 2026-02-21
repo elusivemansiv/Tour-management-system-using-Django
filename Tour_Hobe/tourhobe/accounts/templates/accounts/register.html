@@ -3,20 +3,61 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto mt-20 bg-white p-6 rounded-xl shadow">
-    <h2 class="text-2xl font-bold mb-4 text-center">Create Account</h2>
+<div class="flex min-h-screen w-full flex-col lg:flex-row overflow-hidden bg-background-light dark:bg-background-dark">
+    <!-- Left Pane: Hero Section -->
+    <div class="relative hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-slate-900 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img alt="Scenic mountain landscape at sunset" class="h-full w-full object-cover opacity-60"
+                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_E6jDPLAxzPXNNupt8bEpiw1qQuFCLzhIYsedUObjgXSDJdfuqvt-3KTyJRhAuQgX1t6vwp1-Wzd2W4Z13s5jnIXo0ROQw_IHZmUHgiT4guHobpCfWCgI1DySaywaQ9XiHJyej17PjNEzM9GPkh-ObAXYszbl3KZYifFb4366psau3SCUSUopQPEFvntsIDQGOlTs7fXFPHiRmUs2FEDtiWXeDwVhaqithmQCqcnC4XeGB9uJM-O3sc4mqdIUFmr3hbzlrhvgyQ"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900/40"></div>
+        </div>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="w-full bg-green-500 text-white py-2 rounded mt-4">
-            Register
-        </button>
-    </form>
+        <div class="relative z-10 max-w-lg text-white">
+            <h1 class="text-5xl font-extrabold leading-tight mb-6">
+                The world is a book, and those who do not travel read only one page.
+            </h1>
+            <p class="text-lg text-slate-200">
+                Join our community of global travelers and explore the unseen corners of the Earth.
+            </p>
+        </div>
 
-    <p class="text-center mt-4">
-        Already have an account?
-        <a href="{% url 'login' %}" class="text-blue-600">Login</a>
-    </p>
+        <div class="relative z-10">
+            <p class="text-slate-400 text-sm">© 2024 TravelManager. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- Right Pane: Registration Form -->
+    <div class="w-full lg:w-1/2 flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-24 bg-white dark:bg-background-dark">
+        <div class="max-w-md w-full mx-auto">
+            <div class="lg:hidden flex items-center gap-3 mb-8">
+                <div class="bg-primary p-2 rounded-lg">
+                    <span class="material-symbols-outlined text-white">explore</span>
+                </div>
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">TravelManager</h2>
+            </div>
+
+            <div class="mb-10">
+                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Create Your Account</h2>
+                <p class="mt-2 text-slate-500 dark:text-slate-400">Join our community of global travelers.</p>
+            </div>
+
+            <form method="post" class="space-y-5">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit"
+                        class="w-full py-4 px-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg shadow-primary/20 transform transition-all active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="mt-10 text-center">
+                <p class="text-sm text-slate-600 dark:text-slate-400">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="text-primary font-bold hover:underline ml-1">Log In</a>
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

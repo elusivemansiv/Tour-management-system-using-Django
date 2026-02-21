@@ -1,0 +1,90 @@
+{% extends "packages/base.html" %}
+{% block title %}{{ package.title }} | Tour Hobe{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="relative h-[450px] w-full overflow-hidden">
+    <img src="{{ package.image.url }}"
+         class="w-full h-full object-cover">
+
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+
+    <div class="absolute bottom-0 left-0 right-0 p-10 max-w-7xl mx-auto">
+        <span class="bg-green-600/90 text-white px-3 py-1 rounded-full text-xs font-bold">
+            {{ package.duration }} Days
+        </span>
+
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white mt-4">
+            {{ package.title }}
+        </h1>
+
+        <p class="text-slate-200 mt-2">
+            {{ package.location.name }}
+        </p>
+    </div>
+</div>
+
+<!-- CONTENT -->
+<section class="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+    <!-- LEFT -->
+    <div class="lg:col-span-2 space-y-10">
+
+        <!-- OVERVIEW -->
+        <div>
+            <h2 class="text-2xl font-bold mb-3">Overview</h2>
+            <p class="text-slate-600 leading-relaxed">
+                {{ package.description }}
+            </p>
+        </div>
+
+        <!-- ITINERARY -->
+        {% if package.itinerary %}
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Tour Itinerary</h2>
+            <div class="prose max-w-none text-slate-600">
+                
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- INCLUSIONS -->
+        {% if package.inclusions %}
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Inclusions</h2>
+            <ul class="list-disc pl-6 text-slate-600">
+                
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- RIGHT: BOOK CARD -->
+    <div>
+        <div class="sticky top-24 bg-white border rounded-2xl shadow-xl overflow-hidden">
+
+            <div class="bg-green-600 p-6 text-white">
+                <p class="text-sm opacity-80">Starting from</p>
+                <h3 class="text-3xl font-bold">
+                    {{ package.price }} TK
+                </h3>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <a href="{% url 'book_package' package.id %}"
+                   class="block w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl text-center transition">
+                    Proceed to Book
+                </a>
+
+                <p class="text-xs text-center text-slate-500">
+                    Secure checkout powered by Tour Hobe
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}
