@@ -1,0 +1,137 @@
+{% extends "packages/base.html" %}
+{% block title %}About Us | Tour Hobe{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="relative overflow-hidden pt-16 pb-24">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+        <div>
+
+
+            <h1 class="text-5xl font-extrabold mb-6">
+                Redefining Travel for the <span class="text-green-600">Modern World</span>
+            </h1>
+
+            <p class="text-lg text-slate-600 mb-10 max-w-lg">
+                Tour Hobe is dedicated to delivering seamless, unforgettable travel experiences with trusted global
+                partners and expert planning.
+            </p>
+
+            <div class="flex gap-4">
+                <a href="{% url 'explore' %}"
+                    class="bg-green-600 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition">
+                    Explore Destinations
+                </a>
+
+                <a href="{% url 'contact' %}"
+                    class="border px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+
+        <div class="relative rounded-2xl overflow-hidden shadow-xl">
+            <img class="w-full h-[480px] object-cover"
+                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d" alt="Tour Hobe Team">
+        </div>
+
+    </div>
+</section>
+
+<!-- VALUES -->
+<section class="py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+
+        <h2 class="text-3xl font-extrabold mb-12">
+            Values That Drive Every Journey
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+            <div class="bg-white p-8 rounded-xl shadow">
+                <h4 class="text-xl font-bold mb-3">Integrity</h4>
+                <p class="text-slate-500 text-sm">
+                    Honest pricing, transparent bookings, and trusted partnerships.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow">
+                <h4 class="text-xl font-bold mb-3">Innovation</h4>
+                <p class="text-slate-500 text-sm">
+                    Smart technology that simplifies your travel planning.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow">
+                <h4 class="text-xl font-bold mb-3">Global Reach</h4>
+                <p class="text-slate-500 text-sm">
+                    Packages across Asia, Europe, Middle East & beyond.
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow">
+                <h4 class="text-xl font-bold mb-3">Care</h4>
+                <p class="text-slate-500 text-sm">
+                    Dedicated support before, during, and after your trip.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- TEAM -->
+<section class="py-24">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+
+        <h2 class="text-3xl font-extrabold mb-14">
+            Meet Our Leadership
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            {% for member in "1234" %}
+            <div class="bg-white rounded-xl shadow overflow-hidden">
+                <img class="h-64 w-full object-cover" src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe"
+                    alt="Team Member">
+                <div class="p-5">
+                    <h4 class="font-bold">Leadership Member</h4>
+                    <p class="text-green-600 text-sm">Management</p>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-24 bg-green-600 text-white">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+
+        <h2 class="text-4xl font-extrabold mb-6">
+            Ready to Plan Your Next Adventure?
+        </h2>
+
+        <p class="text-lg mb-8 text-white/90">
+            Let Tour Hobe handle everything while you enjoy the journey.
+        </p>
+
+        <div class="flex justify-center gap-4">
+            <a href="{% url 'contact' %}"
+                class="bg-white text-green-600 px-8 py-4 rounded-xl font-bold hover:bg-slate-100">
+                Contact Us
+            </a>
+
+            <a href="{% url 'all_packages' %}"
+                class="border border-white px-8 py-4 rounded-xl font-bold hover:bg-white/10">
+                View Packages
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

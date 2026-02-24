@@ -41,3 +41,9 @@ def all_packages(request):
     return render(request, 'packages/all_packages.html', {
         'packages': packages
     })
+
+def contact(request):
+    return render(request, "packages/contact.html")
+
+def about(request):
+    return render(request, "packages/about.html")
