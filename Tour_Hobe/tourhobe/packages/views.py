@@ -1,13 +1,19 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Location, Package, CarouselSlide
+from flights.models import Flight
+from hotels.models import Hotel
 
 def home(request):
     locations = Location.objects.all()
     slides = CarouselSlide.objects.filter(is_active=True)
+    flights = Flight.objects.all()[:4] # Get top 4 flights
+    hotels = Hotel.objects.all()[:4] # Get top 4 hotels
 
     return render(request, 'packages/home.html', {
         'locations': locations,
-        'slides': slides
+        'slides': slides,
+        'flights': flights,
+        'hotels': hotels,
     })
 
 

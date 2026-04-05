@@ -17,16 +17,17 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#2b8cee",
+                        primary: "#006ce4",
+                        secondary: "#ffb700",
                         "background-light": "#f8fafc",
                         "background-dark": "#0f172a",
                     },
                     fontFamily: {
-                        display: ["Plus Jakarta Sans", "sans-serif"],
+                        display: ["Inter", "sans-serif"],
                     },
                     boxShadow: {
                         soft: "0 10px 25px -5px rgba(0,0,0,.05)",
-                        elegant: "0 20px 50px -12px rgba(43,140,238,.15)",
+                        elegant: "0 20px 50px -12px rgba(0,108,228,.15)",
                     }
                 },
             },
@@ -34,52 +35,59 @@
     </script>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
     <style>
         body {
-            font-family: "Plus Jakarta Sans", sans-serif;
+            font-family: "Inter", sans-serif;
+            scroll-behavior: smooth;
         }
     </style>
 </head>
 
 <body class="bg-background-light text-slate-900 min-h-screen flex flex-col">
 
+
+
     <!-- NAVBAR -->
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b">
+    <nav class="sticky top-0 z-50 bg-white shadow-sm">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
 
+            <!-- Logo -->
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <span class="material-symbols-outlined text-white text-sm">flight_takeoff</span>
+                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-elegant">
+                    <span class="material-symbols-outlined text-white text-lg">flight_takeoff</span>
                 </div>
-                <span class="text-xl font-bold"><a href="/" class="hover:text-primary">Tour Hobe</a></span>
+                <span class="text-2xl font-bold tracking-tight text-primary"><a href="/">Tour Hobe</a></span>
             </div>
 
-
-            <div class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                <a href="/" class="hover:text-primary">Home</a>
-                <a href="{% url 'about' %}" class="hover:text-primary">About Us</a>
-                <a href="{% url 'explore' %}" class="hover:text-primary"> Explore</a>
-                <a href="{% url 'all_packages' %}" class="hover:text-primary">Packages</a>
-                <a href="{% url 'contact' %}" class="hover:text-primary">Contact</a>
-
+            <!-- Links -->
+            <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-700">
+                <a href="/" class="hover:text-primary transition-colors">Home</a>
+                <a href="{% url 'explore' %}" class="hover:text-primary transition-colors">Destinations</a>
+                <a href="{% url 'all_packages' %}" class="hover:text-primary transition-colors">Packages</a>
+                <a href="{% url 'contact' %}" class="hover:text-primary transition-colors">Contact</a>
             </div>
 
+            <!-- Auth/Profile -->
             <div class="flex items-center gap-4">
                 {% if user.is_authenticated %}
-                <span class="text-sm text-slate-500">Hi, {{ user.username }}</span>
-                {% if user.is_authenticated %}
-                <a href="{% url 'user_dashboard' %}" class="hover:text-primary"> <i class="fa-solid fa-user"></i></a>
-                {% endif %}
-                <a href="{% url 'logout' %}" class="px-5 py-2 bg-primary text-white rounded-lg text-sm font-bold">
-                    Logout
+                <div class="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
+                    <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
+                        {{ user.username.0|upper }}
+                    </span>
+                    <span class="text-sm font-semibold text-slate-700 hidden sm:block">{{ user.username }}</span>
+                </div>
+                <a href="{% url 'user_dashboard' %}" class="text-slate-500 hover:text-primary transition-colors" title="Dashboard">
+                    <i class="fa-solid fa-layer-group text-lg"></i>
+                </a>
+                <a href="{% url 'logout' %}" class="px-5 py-2.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg text-sm font-bold transition-colors">
+                    Log out
                 </a>
                 {% else %}
-                <a href="{% url 'login' %}" class="text-sm font-semibold">Login</a>
-                <a href="{% url 'register' %}" class="px-5 py-2 bg-primary text-white rounded-lg text-sm font-bold">
+                <a href="{% url 'login' %}" class="px-5 py-2.5 text-primary bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-bold transition-colors">Login</a>
+                <a href="{% url 'register' %}" class="px-5 py-2.5 bg-primary text-white hover:bg-primary/90 rounded-lg text-sm font-bold transition-colors shadow-lg shadow-primary/30">
                     Register
                 </a>
                 {% endif %}
@@ -90,9 +98,10 @@
 
     <!-- MESSAGES -->
     {% if messages %}
-    <div class="max-w-7xl mx-auto px-6 mt-4">
+    <div class="max-w-7xl mx-auto px-6 mt-4 w-full relative z-40">
         {% for message in messages %}
-        <div class="p-4 mb-3 rounded-lg text-sm bg-green-100 text-green-700">
+        <div class="p-4 mb-3 rounded-lg text-sm {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} flex items-center gap-2 shadow-sm">
+            <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% else %}fa-circle-check{% endif %}"></i>
             {{ message }}
         </div>
         {% endfor %}
@@ -105,61 +114,43 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 pt-20 pb-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8 mt-12">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center gap-2 mb-6">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                                <span class="material-symbols-outlined text-white text-sm">flight_takeoff</span>
-                            </div>
-                            <span class="text-xl font-bold">Tour Hobe</span>
+                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white text-sm">flight_takeoff</span>
                         </div>
+                        <span class="text-xl font-bold text-slate-900">Tour Hobe</span>
                     </div>
                     <p class="text-slate-500 text-sm leading-relaxed mb-6">
-                        Making world travel simple, affordable, and accessible for everyone. Your journey starts here.
+                        Making world travel simple, affordable, and accessible for everyone. Book flights, hotels, and holiday packages all in one platform.
                     </p>
-                    <div class="flex gap-4">
-
-                    </div>
                 </div>
                 <div>
-                    <h5 class="font-bold text-sm uppercase tracking-widest mb-6">Company</h5>
+                    <h5 class="font-bold text-slate-900 text-sm mb-6">Company</h5>
                     <ul class="space-y-4 text-sm text-slate-500">
                         <li><a class="hover:text-primary transition-colors" href="{% url 'about' %}">About Us</a></li>
                         <li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
                         <li><a class="hover:text-primary transition-colors" href="#">Blog</a></li>
-
                     </ul>
                 </div>
                 <div>
-                    <h5 class="font-bold text-sm uppercase tracking-widest mb-6">Support</h5>
+                    <h5 class="font-bold text-slate-900 text-sm mb-6">Support</h5>
                     <ul class="space-y-4 text-sm text-slate-500">
-                        <li><a class="hover:text-primary transition-colors" href="{% url 'contact' %}">Help Center</a>
-                        </li>
+                        <li><a class="hover:text-primary transition-colors" href="{% url 'contact' %}">Help Center</a></li>
                         <li><a class="hover:text-primary transition-colors" href="#">Safety Information</a></li>
-                        <li><a class="hover:text-primary transition-colors" href="#">Refund Policies</a></li>
+                        <li><a class="hover:text-primary transition-colors" href="#">Cancellation Policy</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h5 class="font-bold text-sm uppercase tracking-widest mb-6">Subscribe</h5>
-                    <p class="text-slate-500 text-sm mb-4">Get the latest travel deals.</p>
-                    <form class="flex flex-col gap-2">
-                        <input
-                            class="px-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary text-sm"
-                            placeholder="Your email" type="email" />
-                        <button
-                            class="w-full bg-primary text-white font-bold py-3 rounded-xl text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">Subscribe</button>
-                    </form>
-                </div>
+
             </div>
-            <div
-                class="pt-8 border-t border-slate-50 dark:border-slate-800 flex flex-col md:row justify-between items-center gap-4">
-                <p class="text-xs text-slate-400">© 2026 TourHobe. All rights reserved.</p>
+            <div class="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-slate-500">© 2026 TourHobe. All rights reserved.</p>
                 <div class="flex gap-6">
-                    <a class="text-xs text-slate-400 hover:text-primary" href="#">Privacy Policy</a>
-                    <a class="text-xs text-slate-400 hover:text-primary" href="#">Terms of Service</a>
+                    <a class="text-xs text-slate-500 hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                    <a class="text-xs text-slate-500 hover:text-primary transition-colors" href="#">Terms of Service</a>
                 </div>
             </div>
         </div>

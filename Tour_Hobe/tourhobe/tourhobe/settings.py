@@ -30,13 +30,15 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-snbmtqsl$4l$n@j=cph+l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 't')
 
-ALLOWED_HOSTS = ['*'] # Accept all hosts for generic deployment, Railway will handle the proxy
-CSRF_TRUSTED_ORIGINS = ['https://*.up.railway.app']
+ALLOWED_HOSTS = ['tourhobe.stradigtech.com', 'localhost', '127.0.0.1'] 
+CSRF_TRUSTED_ORIGINS = ['https://tourhobe.stradigtech.com', 'http://localhost:8000', 'http://127.0.0.1:8000']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jet',
+    'jet.dashboard',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +48,8 @@ INSTALLED_APPS = [
     'packages',
     'accounts',
     'bookings',
+    'flights',
+    'hotels',
 ]
 
 MIDDLEWARE = [
@@ -133,7 +137,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Use basic static file storage to avoid 500 errors on missing files (common in Django Admin)
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 MEDIA_URL = '/media/'
