@@ -1,0 +1,58 @@
+{% extends "packages/base.html" %}
+{% block title %}Book Flight: {{ flight.airline }} | Tour Hobe{% endblock %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto px-6 py-20 text-center">
+    <div class="mb-10 flex flex-col items-center">
+        <div class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6">
+            <span class="material-symbols-outlined text-4xl">flight_takeoff</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">Confirm Your Selection</h1>
+        <p class="text-lg text-slate-500 font-medium">You are booking a flight with <strong>{{ flight.airline }}</strong> from <strong>{{ flight.origin }}</strong> to <strong>{{ flight.destination }}</strong>.</p>
+    </div>
+
+    <!-- TICKET PREVIEW -->
+    <div class="bg-white border-2 border-primary border-dashed rounded-3xl p-8 mb-10 shadow-xl relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
+            <div class="text-left">
+                <span class="text-[10px] font-extrabold text-primary uppercase tracking-[0.2em] block mb-2">Selected Airline</span>
+                <p class="text-2xl font-black text-slate-900">{{ flight.airline }}</p>
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ flight.cabin_class }}</p>
+            </div>
+
+            <div class="flex-1 flex items-center gap-6 justify-center">
+                <div class="text-center">
+                    <p class="text-2xl font-black text-slate-900">{{ flight.departure_time|date:"H:i" }}</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase">{{ flight.origin }}</p>
+                </div>
+                <div class="flex-1 border-t-2 border-slate-100 border-dotted relative h-px flex flex-col items-center">
+                     <span class="material-symbols-outlined text-primary bg-white -mt-3.5 px-2">flight</span>
+                </div>
+                <div class="text-center">
+                    <p class="text-2xl font-black text-slate-900">{{ flight.arrival_time|date:"H:i" }}</p>
+                    <p class="text-xs font-bold text-slate-400 uppercase">{{ flight.destination }}</p>
+                </div>
+            </div>
+
+             <div class="text-right">
+                <span class="text-[10px] font-extrabold text-primary uppercase tracking-[0.2em] block mb-2">Total Amount</span>
+                <p class="text-2xl font-black text-slate-900 uppercase tracking-tighter">৳ {{ flight.price|floatformat:0 }}</p>
+            </div>
+        </div>
+        
+        <!-- Decoration -->
+        <div class="absolute -right-10 -bottom-10 opacity-5 rotate-12">
+             <span class="material-symbols-outlined text-[200px]">airplane_ticket</span>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+        <button class="w-full md:w-auto px-10 py-4 bg-primary text-white font-bold text-sm rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/20">
+            Confirm & Proceed to Payment
+        </button>
+        <a href="{% url 'flight_list' %}" class="w-full md:w-auto px-10 py-4 bg-slate-100 text-slate-600 font-bold text-sm rounded-2xl hover:bg-slate-200 transition-all">
+            Cancel Selection
+        </a>
+    </div>
+</section>
+{% endblock %}

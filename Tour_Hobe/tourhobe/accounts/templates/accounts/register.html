@@ -1,63 +1,170 @@
 {% extends "packages/base.html" %}
-
-{% block title %}Register{% endblock %}
+{% block title %}Join Tour Hobe | Create Your Account{% endblock %}
 
 {% block content %}
-<div class="flex min-h-screen w-full flex-col lg:flex-row overflow-hidden bg-background-light dark:bg-background-dark">
-    <!-- Left Pane: Hero Section -->
-    <div class="relative hidden lg:flex lg:w-1/2 flex-col justify-between p-12 bg-slate-900 overflow-hidden">
+<div class="flex min-h-[calc(100vh-80px)] w-full flex-col lg:flex-row overflow-hidden bg-white">
+    <!-- LEFT PANE: BRANDING & INSPIRATION -->
+    <div class="relative hidden lg:flex lg:w-5/12 flex-col justify-between p-16 bg-slate-900 overflow-hidden">
+        <!-- Background Image with Overlay -->
         <div class="absolute inset-0 z-0">
-            <img alt="Scenic mountain landscape at sunset" class="h-full w-full object-cover opacity-60"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_E6jDPLAxzPXNNupt8bEpiw1qQuFCLzhIYsedUObjgXSDJdfuqvt-3KTyJRhAuQgX1t6vwp1-Wzd2W4Z13s5jnIXo0ROQw_IHZmUHgiT4guHobpCfWCgI1DySaywaQ9XiHJyej17PjNEzM9GPkh-ObAXYszbl3KZYifFb4366psau3SCUSUopQPEFvntsIDQGOlTs7fXFPHiRmUs2FEDtiWXeDwVhaqithmQCqcnC4XeGB9uJM-O3sc4mqdIUFmr3hbzlrhvgyQ" />
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-slate-900/40"></div>
+            <img alt="Stunning mountain lake" class="h-full w-full object-cover opacity-60 scale-105 group-hover:scale-100 transition-transform duration-1000"
+                src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2070" />
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/40 via-slate-900/60 to-slate-900"></div>
         </div>
 
-        <div class="relative z-10 max-w-lg text-white">
-            <h1 class="text-5xl font-extrabold leading-tight mb-6">
-                The world is a book, and those who do not travel read only one page.
-            </h1>
-            <p class="text-lg text-slate-200">
-                Join our community of global travelers and explore the unseen corners of the Earth.
-            </p>
+        <div class="relative z-10">
+            <div class="flex items-center gap-2 mb-10">
+                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-elegant">
+                    <span class="material-symbols-outlined text-white text-lg">flight_takeoff</span>
+                </div>
+                <span class="text-2xl font-black tracking-tight text-white">Tour Hobe</span>
+            </div>
+            
+            <div class="max-w-md">
+                <h1 class="text-5xl font-black text-white leading-[1.1] mb-8 tracking-tight">
+                    Start your <span class="text-secondary">adventure</span> with us today.
+                </h1>
+                <p class="text-xl text-white/70 font-medium leading-relaxed">
+                    Join over 50,000+ travelers exploring the world's most hidden gems. Your journey of a lifetime begins with a single click.
+                </p>
+            </div>
         </div>
 
-
+        <div class="relative z-10">
+            <div class="flex items-center gap-4 p-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl">
+                <div class="flex -space-x-3">
+                    <img class="w-10 h-10 rounded-full border-2 border-slate-900" src="https://i.pravatar.cc/100?u=1" alt="User">
+                    <img class="w-10 h-10 rounded-full border-2 border-slate-900" src="https://i.pravatar.cc/100?u=2" alt="User">
+                    <img class="w-10 h-10 rounded-full border-2 border-slate-900" src="https://i.pravatar.cc/100?u=3" alt="User">
+                </div>
+                <p class="text-sm font-bold text-white/80">Trusted by thousands of happy explorers</p>
+            </div>
+        </div>
     </div>
 
-    <!-- Right Pane: Registration Form -->
-    <div
-        class="w-full lg:w-1/2 flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-24 bg-white dark:bg-background-dark">
-        <div class="max-w-md w-full mx-auto">
-            <div class="lg:hidden flex items-center gap-3 mb-8">
-                <div class="bg-primary p-2 rounded-lg">
-                    <span class="material-symbols-outlined text-white">explore</span>
+    <!-- RIGHT PANE: REGISTRATION FORM -->
+    <div class="w-full lg:w-7/12 flex flex-col justify-center px-6 py-16 sm:px-12 md:px-20 lg:px-32 xl:px-40 bg-white">
+        <div class="max-w-lg w-full mx-auto">
+            
+            <div class="mb-10 text-center lg:text-left">
+                <h2 class="text-4xl font-black text-slate-900 tracking-tight mb-3">Create Account</h2>
+                <p class="text-slate-500 font-medium text-lg">Sign up to unlock exclusive deals and personalized trips.</p>
+            </div>
+
+            <!-- Error Messages -->
+            {% if form.errors %}
+            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-r-xl">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="material-symbols-outlined text-red-500">error</span>
+                    <h4 class="font-bold text-red-800 text-sm">Please check the following:</h4>
                 </div>
-                <h2 class="text-xl font-bold text-slate-900 dark:text-white">Tour Hobe</h2>
+                <ul class="text-sm text-red-700 font-medium list-disc list-inside space-y-1">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
             </div>
+            {% endif %}
 
-            <div class="mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Create Your Account
-                </h2>
-                <p class="mt-2 text-slate-500 dark:text-slate-400">Join our community of global travelers.</p>
-            </div>
-
-            <form method="post" class="space-y-5">
+            <form method="post" class="space-y-6">
                 {% csrf_token %}
-                {{ form.as_p }}
+                
+                <!-- Custom Field Rendering -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Username -->
+                    <div class="space-y-2">
+                        <label for="id_username" class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Username</label>
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">person</span>
+                            <input type="text" name="username" id="id_username" required
+                                class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none font-bold text-slate-900 placeholder:text-slate-300"
+                                placeholder="johndoe">
+                        </div>
+                    </div>
+                    <!-- Email -->
+                    <div class="space-y-2">
+                        <label for="id_email" class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                        <div class="relative group">
+                            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">alternate_email</span>
+                            <input type="email" name="email" id="id_email" required
+                                class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none font-bold text-slate-900 placeholder:text-slate-300"
+                                placeholder="name@company.com">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-2">
+                    <label for="id_password1" class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Choose Password</label>
+                    <div class="relative group">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">lock</span>
+                        <input type="password" name="password1" id="id_password1" required
+                            class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none font-bold text-slate-900 placeholder:text-slate-300"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+
+                <!-- Password Confirm -->
+                <div class="space-y-2">
+                    <label for="id_password2" class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Confirm Password</label>
+                    <div class="relative group">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">verified_user</span>
+                        <input type="password" name="password2" id="id_password2" required
+                            class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none font-bold text-slate-900 placeholder:text-slate-300"
+                            placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-2">
+                    <input type="checkbox" id="terms" required class="w-5 h-5 rounded text-primary border-slate-200 focus:ring-primary/20">
+                    <label for="terms" class="text-sm font-bold text-slate-500">I agree to the <a href="#" class="text-primary hover:underline">Terms of Service</a> and <a href="#" class="text-primary hover:underline">Privacy Policy</a>.</label>
+                </div>
 
                 <button type="submit"
-                    class="w-full py-4 px-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg shadow-primary/20 transform transition-all active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-                    Create Account
+                    class="w-full py-5 px-4 bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/25 hover:bg-primary/90 hover:-translate-y-0.5 transition-all active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-primary/20 text-lg">
+                    Create My Account
                 </button>
             </form>
 
-            <div class="mt-10 text-center">
-                <p class="text-sm text-slate-600 dark:text-slate-400">
+            <div class="mt-12 text-center">
+                <div class="relative mb-8">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-100"></div>
+                    </div>
+                    <div class="relative flex justify-center text-xs font-black text-slate-400 uppercase tracking-[0.2em]">
+                        <span class="bg-white px-4">Or sign up with</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-10">
+                    <button class="flex items-center justify-center gap-3 px-6 py-4 bg-white border border-slate-100 rounded-2xl hover:bg-slate-50 transition-colors shadow-sm font-bold text-slate-700">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+                        Google
+                    </button>
+                    <button class="flex items-center justify-center gap-3 px-6 py-4 bg-[#1877F2] text-white rounded-2xl hover:opacity-90 transition-opacity shadow-sm font-bold">
+                        <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" class="w-5 h-5 brightness-0 invert" alt="Facebook">
+                        Facebook
+                    </button>
+                </div>
+
+                <p class="text-base font-bold text-slate-500">
                     Already have an account?
-                    <a href="{% url 'login' %}" class="text-primary font-bold hover:underline ml-1">Log In</a>
+                    <a href="{% url 'login' %}" class="text-primary hover:underline ml-1">Log In</a>
                 </p>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    @keyframes slide-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-up {
+        animation: slide-up 0.6s ease-out forwards;
+    }
+</style>
 {% endblock %}

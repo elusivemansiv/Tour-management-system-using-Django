@@ -1,0 +1,147 @@
+{% extends "packages/base.html" %}
+{% block title %}Explore Hotels | Tour Hobe{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="relative py-20 bg-slate-900 border-b border-white overflow-hidden">
+    <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] z-0"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">Find Your Perfect Stay</h1>
+        <p class="text-lg text-white/80 max-w-2xl mx-auto font-medium">Explore our handpicked collection of luxury resorts, boutique hotels, and budget-friendly stays across the world.</p>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="max-w-7xl mx-auto px-6 py-12 lg:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- SIDEBAR: FILTERS -->
+        <aside class="lg:col-span-3 space-y-8">
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm sticky top-24">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">filter_list</span> Filters
+                    </h3>
+                    <a href="{% url 'hotel_list' %}" class="text-xs font-bold text-primary hover:underline">Clear All</a>
+                </div>
+
+                <form method="GET" action="{% url 'hotel_list' %}" class="space-y-6">
+                    <!-- Location Filter -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Location</label>
+                        <select name="location" onchange="this.form.submit()" class="w-full bg-slate-50 border-slate-200 rounded-xl text-sm font-semibold focus:border-primary focus:ring-primary">
+                            <option value="">All Locations</option>
+                            {% for loc in locations %}
+                            <option value="{{ loc }}" {% if selected_location == loc %}selected{% endif %}>{{ loc }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Tier Filter -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Hotel Tier</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="tier" value="" {% if not selected_tier %}checked{% endif %} onchange="this.form.submit()" class="text-primary focus:ring-primary w-4 h-4 border-slate-300">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">All Tiers</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="tier" value="premium" {% if selected_tier == 'premium' %}checked{% endif %} onchange="this.form.submit()" class="text-primary focus:ring-primary w-4 h-4 border-slate-300">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">Premium</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="tier" value="standard" {% if selected_tier == 'standard' %}checked{% endif %} onchange="this.form.submit()" class="text-primary focus:ring-primary w-4 h-4 border-slate-300">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">Standard</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="tier" value="budget" {% if selected_tier == 'budget' %}checked{% endif %} onchange="this.form.submit()" class="text-primary focus:ring-primary w-4 h-4 border-slate-300">
+                                <span class="text-sm font-medium text-slate-600 group-hover:text-slate-900">Budget Friendly</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Star Rating Filter -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Star Rating</label>
+                        <div class="space-y-3">
+                            {% for i in "54321"|make_list %}
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="star_rating" value="{{ i }}" {% if selected_star == i %}checked{% endif %} onchange="this.form.submit()" class="text-primary focus:ring-primary w-4 h-4 border-slate-300">
+                                <div class="flex text-yellow-400 text-sm">
+                                    {% if i == "5" %} ★★★★★ {% elif i == "4" %} ★★★★ {% elif i == "3" %} ★★★ {% elif i == "2" %} ★★ {% else %} ★ {% endif %}
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </aside>
+
+        <!-- MAIN GRID: HOTEL LIST -->
+        <main class="lg:col-span-9">
+            <!-- Results Bar -->
+            <div class="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
+                <p class="text-sm font-bold text-slate-500">Showing <span class="text-slate-900">{{ hotels.count }}</span> Properties</p>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Sort by:</span>
+                    <select class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer">
+                        <option>Recommended</option>
+                        <option>Price: Low to High</option>
+                        <option>Rating: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {% for hotel in hotels %}
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-elegant transition-all group flex flex-col">
+                    <div class="h-56 bg-slate-200 relative overflow-hidden shrink-0">
+                        {% if hotel.image %}
+                            <img src="{{ hotel.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center text-slate-300">
+                                <span class="material-symbols-outlined text-6xl">hotel</span>
+                            </div>
+                        {% endif %}
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-white/90 backdrop-blur-md text-slate-900 px-3 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-widest border border-slate-100 italic">
+                                {{ hotel.get_tier_display }}
+                            </span>
+                        </div>
+                        <div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">star</span> {{ hotel.star_rating }}
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-extrabold text-slate-900 mb-2 truncate group-hover:text-primary transition-colors">{{ hotel.name }}</h3>
+                            <p class="flex items-center gap-1 text-sm text-slate-500 font-medium mb-4">
+                                <span class="material-symbols-outlined text-[18px]">location_on</span> {{ hotel.location }}
+                            </p>
+                            <p class="text-sm text-slate-600 line-clamp-2 leading-relaxed mb-6">{{ hotel.description }}</p>
+                        </div>
+                        <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+                            <div>
+                                <span class="block text-[10px] font-bold text-slate-400 uppercase mb-0.5">Price / Night</span>
+                                <span class="text-xl font-extrabold text-slate-900 tracking-tight">৳ {{ hotel.price_per_night|floatformat:0 }}</span>
+                            </div>
+                            <a href="{% url 'hotel_detail' hotel.id %}" class="px-6 py-3 bg-primary/10 text-primary font-bold text-sm rounded-xl hover:bg-primary hover:text-white transition-all">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full py-20 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                    <span class="material-symbols-outlined text-6xl text-slate-300 mb-4">hotel_class</span>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">No Hotels Found</h3>
+                    <p class="text-slate-500">Try adjusting your filters to find your perfect stay.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+</section>
+{% endblock %}

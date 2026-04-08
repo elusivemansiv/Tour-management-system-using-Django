@@ -81,6 +81,7 @@
         <!-- TABS NAV (Mock logic for UI visual) -->
         <div class="flex border-b border-slate-200 overflow-x-auto sticky top-20 bg-white/95 backdrop-blur z-30 pt-4">
             <a href="#overview" class="px-6 py-4 text-sm font-bold border-b-[3px] border-primary text-primary whitespace-nowrap">Overview</a>
+            <a href="#hotels" class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Hotels</a>
             <a href="#itinerary" class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Itinerary</a>
             <a href="#policies" class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Policies</a>
         </div>
@@ -116,8 +117,67 @@
             </div>
         </div>
 
+        <!-- HOTELS -->
+        <div id="hotels" class="scroll-mt-36 border-t border-slate-100 pt-10">
+            <h2 class="text-2xl font-extrabold mb-6 text-slate-900 tracking-tight">Available Hotels</h2>
+            
+            <div class="flex gap-4 mb-8 bg-slate-50 p-2 rounded-xl inline-flex w-full md:w-auto">
+                <a href="?tier=#hotels" class="flex-1 text-center px-4 py-2 text-sm font-bold rounded-lg transition-all {% if not selected_tier %}bg-white text-primary shadow-sm{% else %}text-slate-500 hover:text-slate-800{% endif %}">All</a>
+                <a href="?tier=premium#hotels" class="flex-1 text-center px-4 py-2 text-sm font-bold rounded-lg transition-all {% if selected_tier == 'premium' %}bg-white text-primary shadow-sm{% else %}text-slate-500 hover:text-slate-800{% endif %}">Premium</a>
+                <a href="?tier=budget#hotels" class="flex-1 text-center px-4 py-2 text-sm font-bold rounded-lg transition-all {% if selected_tier == 'budget' %}bg-white text-primary shadow-sm{% else %}text-slate-500 hover:text-slate-800{% endif %}">Budget</a>
+            </div>
+
+            <div class="space-y-6">
+                {% for hotel in hotels %}
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row group">
+                    <div class="md:w-64 h-48 md:h-auto shrink-0 relative bg-slate-200">
+                        {% if hotel.image %}
+                            <img src="{{ hotel.image.url }}" class="w-full h-full object-cover">
+                        {% endif %}
+                        <div class="absolute top-3 left-3 bg-black/50 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded">
+                            {{ hotel.get_tier_display }}
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="font-bold text-lg text-slate-900">{{ hotel.name }}</h3>
+                                    <div class="flex items-center gap-1 text-xs text-slate-500 mt-1">
+                                        <span class="material-symbols-outlined text-[14px]">location_on</span> {{ hotel.location }}
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    {% for i in "12345"|make_list %}
+                                        <span class="text-sm {% if i <= hotel.star_rating|stringformat:'s' %}text-yellow-400{% else %}text-slate-200{% endif %}">★</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-600 line-clamp-2 mb-4">{{ hotel.description }}</p>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
+                            <div>
+                                <span class="text-xs text-slate-500 block">Rooms from</span>
+                                <span class="text-xl font-extrabold text-slate-900">৳{{ hotel.price_per_night|floatformat:0 }}<span class="text-xs text-slate-500 font-normal">/night</span></span>
+                            </div>
+                            <a href="{% url 'hotel_detail' hotel.id %}" class="px-5 py-2.5 bg-primary/10 text-primary font-bold text-sm rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                Select Room
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-12 bg-slate-50 rounded-2xl border border-slate-100 border-dashed">
+                    <span class="material-symbols-outlined text-4xl text-slate-300 mb-2">hotel_class</span>
+                    <h3 class="font-bold text-slate-700">No hotels assigned</h3>
+                    <p class="text-sm text-slate-500 mt-1">Please explore our other packages.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
         <!-- ITINERARY (Mock) -->
-        <div id="itinerary" class="scroll-mt-36 border-t border-slate-100 pt-10">
+        <div id="itinerary" class="scroll-mt-36 border-t border-slate-100 pt-10 mt-10">
             <h2 class="text-2xl font-extrabold mb-8 text-slate-900 tracking-tight">Daily Itinerary</h2>
             
             <div class="space-y-6">

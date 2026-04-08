@@ -1,0 +1,101 @@
+{% extends "packages/base.html" %}
+{% block title %}{{ country.name }} Holiday Packages | Tour Hobe{% endblock %}
+
+{% block content %}
+<!-- BREADCRUMB -->
+<div class="bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center gap-2 text-[13px] font-bold text-slate-500">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <a href="{% url 'explore' %}" class="hover:text-primary transition-colors">Countries</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <span class="text-slate-900 truncate">{{ country.name }} Packages</span>
+        </div>
+    </div>
+</div>
+
+<!-- COUNTRY HEADER -->
+<section class="max-w-7xl mx-auto px-6 py-12 lg:py-16">
+    <div class="flex flex-col md:flex-row items-center gap-10">
+        <div class="w-full md:w-1/2 h-[300px] md:h-[400px] rounded-3xl overflow-hidden shadow-elegant bg-slate-200">
+            {% if country.image %}
+                <img src="{{ country.image.url }}" class="w-full h-full object-cover">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center text-slate-300">
+                    <span class="material-symbols-outlined text-7xl">public</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="w-full md:w-1/2">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">Explore <span class="text-primary">{{ country.name }}</span></h1>
+            <p class="text-lg text-slate-500 leading-relaxed font-medium mb-8">
+                Discover the most amazing holiday packages in {{ country.name }}. From breathtaking landscapes to rich cultural heritage, we offer handpicked tours that will leave you with lifelong memories.
+            </p>
+            <div class="flex items-center gap-6">
+                <div class="flex flex-col">
+                    <span class="text-3xl font-extrabold text-slate-900">{{ packages.count }}</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Active Packages</span>
+                </div>
+                <div class="h-10 w-px bg-slate-200"></div>
+                <div class="flex flex-col">
+                    <span class="text-3xl font-extrabold text-slate-900">100%</span>
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Best Price</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PACKAGES GRID -->
+<section class="max-w-7xl mx-auto px-6 pb-24">
+    <div class="flex items-center justify-between mb-10 pb-4 border-b border-slate-100">
+        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Available Tours</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for package in packages %}
+        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-elegant transition-all group flex flex-col">
+            <div class="h-64 bg-slate-100 relative overflow-hidden shrink-0">
+                {% if package.image %}
+                    <img src="{{ package.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-slate-300">
+                        <span class="material-symbols-outlined text-6xl">photo_camera</span>
+                    </div>
+                {% endif %}
+                <div class="absolute top-4 left-4">
+                    <span class="bg-white/95 backdrop-blur-md text-slate-900 px-3 py-1.5 rounded-xl text-[10px] font-extrabold uppercase tracking-widest border border-slate-100">
+                        {{ package.duration }}
+                    </span>
+                </div>
+                <div class="absolute top-4 right-4 bg-primary/90 backdrop-blur-md text-white px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 uppercase tracking-tighter">
+                    <span class="material-symbols-outlined text-xs">location_on</span> {{ package.location.name }}
+                </div>
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-xl font-extrabold text-slate-900 mb-3 group-hover:text-primary transition-colors leading-tight">{{ package.title }}</h3>
+                    <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed mb-6">{{ package.description }}</p>
+                </div>
+                <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
+                    <div>
+                        <span class="block text-[10px] font-bold text-slate-400 uppercase mb-0.5 tracking-widest">Starting At</span>
+                        <span class="text-xl font-extrabold text-slate-900 tracking-tight">৳{{ package.price|floatformat:0 }}</span>
+                    </div>
+                    <a href="{% url 'package_detail' package.id %}" class="px-6 py-3 bg-secondary text-slate-900 font-bold text-xs rounded-xl hover:bg-yellow-400 transition-all shadow-lg shadow-secondary/20">
+                        Explore
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full py-24 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+            <span class="material-symbols-outlined text-7xl text-slate-300 mb-4">luggage</span>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">No Packages Found</h3>
+            <p class="text-slate-500">We are currently curating more amazing experiences in {{ country.name }}. Please check back soon!</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

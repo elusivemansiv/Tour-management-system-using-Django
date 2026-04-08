@@ -1,0 +1,227 @@
+{% extends "packages/base.html" %}
+{% block title %}{{ hotel.name }} | Tour Hobe Hotels{% endblock %}
+
+{% block content %}
+<!-- BREADCRUMB -->
+<div class="bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center gap-2 text-[13px] font-bold text-slate-500">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <span class="text-slate-500">Hotels</span>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <span class="text-slate-900 truncate">{{ hotel.name }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto px-6 py-10">
+    <!-- HOTEL HEADER -->
+    <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
+        <div>
+            <div class="flex items-center gap-2 mb-3">
+                <div class="flex text-yellow-400">
+                    {% for i in stars_filled %}
+                        <span class="material-symbols-outlined text-[18px]">star</span>
+                    {% endfor %}
+                    {% for i in stars_empty %}
+                        <span class="material-symbols-outlined text-[18px] text-slate-200">star</span>
+                    {% endfor %}
+                </div>
+                <span class="bg-primary/10 text-primary px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider">
+                    {{ hotel.get_tier_display }}
+                </span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mb-2">{{ hotel.name }}</h1>
+            <p class="flex items-center gap-1 text-slate-500 font-medium">
+                <span class="material-symbols-outlined text-[18px]">location_on</span> {{ hotel.location }}
+            </p>
+        </div>
+        <div class="flex flex-col items-end shrink-0">
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Starts From</p>
+            <p class="text-3xl font-extrabold text-primary">৳{{ hotel.price_per_night|floatformat:0 }}</p>
+            <p class="text-xs text-slate-500 font-medium">per night</p>
+        </div>
+    </div>
+
+    <!-- IMAGE & INFO GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        <!-- Main Image -->
+        <div class="lg:col-span-8">
+            <div class="relative h-[300px] md:h-[450px] rounded-2xl overflow-hidden shadow-soft bg-slate-200">
+                {% if hotel.image %}
+                    <img src="{{ hotel.image.url }}" class="w-full h-full object-cover">
+                {% else %}
+                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                        <span class="material-symbols-outlined text-6xl">image</span>
+                        <p class="font-bold mt-2">No Image Available</p>
+                    </div>
+                {% endif %}
+                <!-- Gallery Trigger Button -->
+                <button class="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md text-slate-900 px-4 py-2 rounded-lg text-sm font-bold shadow-lg flex items-center gap-2 hover:bg-white transition-colors">
+                    <span class="material-symbols-outlined text-lg">photo_library</span> View Photos
+                </button>
+            </div>
+        </div>
+
+        <!-- Description Box -->
+        <div class="lg:col-span-4 space-y-6">
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 tracking-tight">About Property</h3>
+                <div class="prose prose-slate prose-sm text-slate-600 leading-relaxed">
+                    <p>{{ hotel.description|linebreaksbr }}</p>
+                </div>
+            </div>
+
+            <div class="bg-primary/5 border border-primary/10 rounded-2xl p-6">
+                <h3 class="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">verified</span> Why Book This?
+                </h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                        <span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+                        Verified properties only
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                        <span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+                        Instant confirmation
+                    </li>
+                    <li class="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                        <span class="material-symbols-outlined text-primary text-[18px] shrink-0">check_circle</span>
+                        Best price guarantee
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABS SECTION -->
+    <div class="relative">
+        <div class="sticky top-20 bg-white/95 backdrop-blur z-30 border-b border-slate-200 mb-8 overflow-x-auto flex">
+            <button class="px-6 py-4 text-sm font-bold border-b-[3px] border-primary text-primary whitespace-nowrap">Available Rooms</button>
+            <button class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Amenities</button>
+            <button class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Location</button>
+            <button class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Reviews</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <!-- Left: Rooms & Amenities -->
+            <div class="lg:col-span-8 space-y-12">
+                <!-- ROOMS LIST -->
+                <section>
+                    <h2 class="text-2xl font-extrabold text-slate-900 mb-6 tracking-tight">Choose Your Room</h2>
+                    <div class="space-y-6">
+                        {% for room in rooms %}
+                        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+                            <div class="flex flex-col md:flex-row">
+                                <div class="md:w-56 h-40 md:h-auto bg-slate-100 shrink-0 relative">
+                                    <div class="absolute inset-0 flex items-center justify-center text-slate-300">
+                                        <span class="material-symbols-outlined text-5xl">king_bed</span>
+                                    </div>
+                                    <div class="absolute top-3 left-3 bg-black/60 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded">
+                                        {{ room.room_type }}
+                                    </div>
+                                </div>
+                                <div class="p-6 flex-1 flex flex-col md:flex-row justify-between gap-6">
+                                    <div class="self-center">
+                                        <h4 class="font-bold text-xl text-slate-900 mb-2">{{ room.room_type }}</h4>
+                                        <div class="flex flex-wrap gap-4 text-sm text-slate-500 font-medium">
+                                            <span class="flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[18px]">person</span>
+                                                {{ room.capacity_adults }} Adults
+                                            </span>
+                                            {% if room.capacity_children > 0 %}
+                                            <span class="flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[18px]">child_care</span>
+                                                {{ room.capacity_children }} children
+                                            </span>
+                                            {% endif %}
+                                            <span class="flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[18px]">verified_user</span>
+                                                Free Wifi
+                                            </span>
+                                        </div>
+                                        <p class="mt-3 text-xs font-bold {% if room.total_rooms > 2 %}text-green-600{% else %}text-red-500{% endif %} uppercase tracking-wide">
+                                            {{ room.total_rooms }} Rooms Left
+                                        </p>
+                                    </div>
+                                    <div class="flex flex-col items-end justify-center border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-8 shrink-0">
+                                        <p class="text-2xl font-extrabold text-slate-900 mb-1">৳{{ room.price_per_night|floatformat:0 }}</p>
+                                        <p class="text-xs text-slate-500 font-medium mb-4">per night (inc. tax)</p>
+                                        <button class="w-full md:w-auto px-8 py-3 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                                            Reserve Room
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="p-10 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                            <p class="font-bold text-slate-500">No rooms currently available online.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <!-- AMENITIES -->
+                <section>
+                    <h2 class="text-2xl font-extrabold text-slate-900 mb-6 tracking-tight">Main Amenities</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {% for amenity in amenities %}
+                        <div class="flex items-center gap-3 p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                            <span class="material-symbols-outlined text-primary">Done</span>
+                            <span class="text-sm font-bold text-slate-700">{{ amenity }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right: Related/Summary -->
+            <div class="lg:col-span-4">
+                <div class="sticky top-28 space-y-8">
+                    <!-- SUPPORT BOX -->
+                    <div class="bg-slate-900 text-white rounded-2xl p-8 relative overflow-hidden group">
+                        <div class="relative z-10">
+                            <h4 class="text-xl font-bold mb-4">Need help with booking?</h4>
+                            <p class="text-slate-400 text-sm mb-6 leading-relaxed">Our booking specialists are available 24/7 to help you secure the best room at the lowest price.</p>
+                            <a href="{% url 'contact' %}" class="inline-flex items-center gap-2 font-bold text-secondary hover:translate-x-1 transition-transform">
+                                Contact Experts <span class="material-symbols-outlined">arrow_forward</span>
+                            </a>
+                        </div>
+                        <!-- Background decoration -->
+                        <div class="absolute -right-10 -bottom-10 opacity-20 group-hover:scale-110 transition-transform duration-500">
+                            <span class="material-symbols-outlined text-[160px] text-primary">support_agent</span>
+                        </div>
+                    </div>
+
+                    <!-- RELATED HOTELS -->
+                    {% if related_hotels %}
+                    <div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-4 tracking-tight">Similar Properties</h4>
+                        <div class="space-y-4">
+                            {% for r_hotel in related_hotels %}
+                            <a href="{% url 'hotel_detail' r_hotel.id %}" class="flex gap-4 p-3 bg-white border border-slate-200 rounded-xl hover:border-primary/50 transition-all group">
+                                <div class="w-20 h-20 bg-slate-100 rounded-lg overflow-hidden shrink-0">
+                                    {% if r_hotel.image %}
+                                        <img src="{{ r_hotel.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                    {% endif %}
+                                </div>
+                                <div class="flex flex-col justify-center">
+                                    <h5 class="font-bold text-sm text-slate-900 group-hover:text-primary transition-colors line-clamp-1">{{ r_hotel.name }}</h5>
+                                    <div class="flex text-yellow-400 my-0.5">
+                                        {% for i in "12345"|make_list %}{% if forloop.counter <= r_hotel.star_rating %}<span class="text-[10px]">★</span>{% endif %}{% endfor %}
+                                    </div>
+                                    <p class="text-xs font-bold text-primary">৳{{ r_hotel.price_per_night|floatformat:0 }}</p>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
