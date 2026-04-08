@@ -1,0 +1,308 @@
+{% extends "packages/base.html" %}
+{% block title %}{{ package.title }} | Tour Hobe{% endblock %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div class="bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center gap-2 text-[13px] font-bold text-slate-500">
+            <a href="/" class="hover:text-primary transition-colors">Home</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <a href="{% url 'explore' %}" class="hover:text-primary transition-colors">Holiday Packages</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <a href="{% url 'location_packages' package.location.id %}" class="hover:text-primary transition-colors">{{ package.location.name }}</a>
+            <span class="material-symbols-outlined text-sm">chevron_right</span>
+            <span class="text-slate-900 truncate">{{ package.title }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- HERO & TITLE -->
+<div class="max-w-7xl mx-auto px-6 pt-10 pb-6">
+    <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
+        <div>
+            <div class="flex items-center gap-3 mb-2">
+                <span class="bg-primary/10 text-primary px-3 py-1 rounded-md text-[11px] font-extrabold uppercase tracking-widest border border-primary/20">
+                    {{ package.duration }} Days Trip
+                </span>
+                <span class="flex items-center gap-1 text-slate-500 text-sm font-semibold">
+                    <span class="material-symbols-outlined text-[16px]">location_on</span> {{ package.location.name }}
+                </span>
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                {{ package.title }}
+            </h1>
+        </div>
+        <div class="flex items-center gap-3 text-sm font-bold text-slate-600 self-start">
+            <button class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg hover:border-primary hover:text-primary transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-lg">share</span> Share
+            </button>
+            <button class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg hover:border-red-500 hover:text-red-500 transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-lg">favorite</span> Save
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN IMAGE GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 h-[400px] md:h-[500px] rounded-2xl overflow-hidden shadow-soft">
+        <div class="md:col-span-3 bg-slate-200 h-full relative group">
+            {% if package.image %}
+                <img src="{{ package.image.url }}" class="w-full h-full object-cover">
+            {% else %}
+                <div class="w-full h-full bg-slate-300"></div>
+            {% endif %}
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+        </div>
+        <div class="hidden md:flex flex-col gap-4 h-full">
+            <div class="flex-1 bg-slate-200 rounded-tr-2xl overflow-hidden relative group">
+                {% if package.location.image %}
+                    <img src="{{ package.location.image.url }}" class="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all">
+                {% else %}
+                    <div class="w-full h-full bg-slate-300"></div>
+                {% endif %}
+            </div>
+            <div class="flex-1 bg-slate-800 rounded-br-2xl flex flex-col items-center justify-center text-white cursor-pointer hover:bg-primary transition-colors group relative overflow-hidden">
+                <span class="material-symbols-outlined text-4xl mb-2 z-10">photo_library</span>
+                <span class="font-bold text-sm z-10">View Gallery</span>
+                <!-- Background visual -->
+                <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] z-0"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONTENT & BOOKING REGION -->
+<section class="max-w-7xl mx-auto px-6 pb-20 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+
+    <!-- LEFT: Details -->
+    <div class="lg:col-span-8 space-y-12">
+
+        <!-- TABS NAV (Mock logic for UI visual) -->
+        <div class="flex border-b border-slate-200 overflow-x-auto sticky top-20 bg-white/95 backdrop-blur z-30 pt-4">
+            <a href="#overview" class="px-6 py-4 text-sm font-bold border-b-[3px] border-primary text-primary whitespace-nowrap">Overview</a>
+            <a href="#hotels" class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Hotels</a>
+            <a href="#itinerary" class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Itinerary</a>
+            <a href="#policies" class="px-6 py-4 text-sm font-bold border-b-[3px] border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">Policies</a>
+        </div>
+
+        <!-- OVERVIEW -->
+        <div id="overview" class="scroll-mt-36">
+            <h2 class="text-2xl font-extrabold mb-6 text-slate-900 tracking-tight">Trip Overview</h2>
+            <div class="prose prose-slate max-w-none text-slate-600 leading-relaxed">
+                <p>{{ package.description|linebreaksbr }}</p>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <span class="material-symbols-outlined text-primary mb-2 text-3xl">flight_takeoff</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Flights</span>
+                    <span class="text-sm font-bold text-slate-800">Included</span>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <span class="material-symbols-outlined text-primary mb-2 text-3xl">hotel</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Hotel</span>
+                    <span class="text-sm font-bold text-slate-800">3-4 Star</span>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <span class="material-symbols-outlined text-primary mb-2 text-3xl">directions_bus</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Transport</span>
+                    <span class="text-sm font-bold text-slate-800">AC Coach</span>
+                </div>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col items-center text-center">
+                    <span class="material-symbols-outlined text-primary mb-2 text-3xl">restaurant</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">Meals</span>
+                    <span class="text-sm font-bold text-slate-800">Breakfast</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOTELS -->
+        <div id="hotels" class="scroll-mt-36 border-t border-slate-100 pt-10">
+            <h2 class="text-2xl font-extrabold mb-6 text-slate-900 tracking-tight">Available Hotels</h2>
+            
+            <div class="flex gap-4 mb-8 bg-slate-50 p-2 rounded-xl inline-flex w-full md:w-auto">
+                <a href="?tier=#hotels" class="flex-1 text-center px-4 py-2 text-sm font-bold rounded-lg transition-all {% if not selected_tier %}bg-white text-primary shadow-sm{% else %}text-slate-500 hover:text-slate-800{% endif %}">All</a>
+                <a href="?tier=premium#hotels" class="flex-1 text-center px-4 py-2 text-sm font-bold rounded-lg transition-all {% if selected_tier == 'premium' %}bg-white text-primary shadow-sm{% else %}text-slate-500 hover:text-slate-800{% endif %}">Premium</a>
+                <a href="?tier=budget#hotels" class="flex-1 text-center px-4 py-2 text-sm font-bold rounded-lg transition-all {% if selected_tier == 'budget' %}bg-white text-primary shadow-sm{% else %}text-slate-500 hover:text-slate-800{% endif %}">Budget</a>
+            </div>
+
+            <div class="space-y-6">
+                {% for hotel in hotels %}
+                <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row group">
+                    <div class="md:w-64 h-48 md:h-auto shrink-0 relative bg-slate-200">
+                        {% if hotel.image %}
+                            <img src="{{ hotel.image.url }}" class="w-full h-full object-cover">
+                        {% endif %}
+                        <div class="absolute top-3 left-3 bg-black/50 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded">
+                            {{ hotel.get_tier_display }}
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="font-bold text-lg text-slate-900">{{ hotel.name }}</h3>
+                                    <div class="flex items-center gap-1 text-xs text-slate-500 mt-1">
+                                        <span class="material-symbols-outlined text-[14px]">location_on</span> {{ hotel.location }}
+                                    </div>
+                                </div>
+                                <div class="flex">
+                                    {% for i in "12345"|make_list %}
+                                        <span class="text-sm {% if i <= hotel.star_rating|stringformat:'s' %}text-yellow-400{% else %}text-slate-200{% endif %}">★</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-600 line-clamp-2 mb-4">{{ hotel.description }}</p>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
+                            <div>
+                                <span class="text-xs text-slate-500 block">Rooms from</span>
+                                <span class="text-xl font-extrabold text-slate-900">৳{{ hotel.price_per_night|floatformat:0 }}<span class="text-xs text-slate-500 font-normal">/night</span></span>
+                            </div>
+                            <a href="{% url 'hotel_detail' hotel.id %}" class="px-5 py-2.5 bg-primary/10 text-primary font-bold text-sm rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                Select Room
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-12 bg-slate-50 rounded-2xl border border-slate-100 border-dashed">
+                    <span class="material-symbols-outlined text-4xl text-slate-300 mb-2">hotel_class</span>
+                    <h3 class="font-bold text-slate-700">No hotels assigned</h3>
+                    <p class="text-sm text-slate-500 mt-1">Please explore our other packages.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ITINERARY (Mock) -->
+        <div id="itinerary" class="scroll-mt-36 border-t border-slate-100 pt-10 mt-10">
+            <h2 class="text-2xl font-extrabold mb-8 text-slate-900 tracking-tight">Daily Itinerary</h2>
+            
+            <div class="space-y-6">
+                <!-- Day 1 -->
+                <div class="flex gap-6 group">
+                    <div class="flex flex-col items-center relative">
+                        <div class="w-12 h-12 bg-primary/10 text-primary font-bold rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:bg-primary group-hover:text-white transition-colors z-10 shrink-0">
+                            D1
+                        </div>
+                        <div class="absolute top-12 bottom-[-24px] w-0.5 bg-slate-200"></div>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 flex-1 shadow-sm group-hover:border-primary/50 group-hover:shadow-md transition-all">
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">Arrival & Welcome</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Arrive at your destination. Our representative will pick you up from the airport and transfer you to your hotel. Rest for the day or explore the local surroundings at your leisure.</p>
+                    </div>
+                </div>
+                
+                <!-- Day 2 -->
+                <div class="flex gap-6 group">
+                    <div class="flex flex-col items-center relative">
+                        <div class="w-12 h-12 bg-primary/10 text-primary font-bold rounded-full flex items-center justify-center border-2 border-primary/20 group-hover:bg-primary group-hover:text-white transition-colors z-10 shrink-0">
+                            D2
+                        </div>
+                        <div class="absolute top-12 bottom-[-24px] w-0.5 bg-slate-200"></div>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 flex-1 shadow-sm group-hover:border-primary/50 group-hover:shadow-md transition-all">
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">Guided City Tour</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">After breakfast, embark on a full-day guided city tour covering all major attractions, historical landmarks, and scenic spots.</p>
+                    </div>
+                </div>
+                
+                <!-- Day N -->
+                <div class="flex gap-6 group">
+                    <div class="flex flex-col items-center relative">
+                        <div class="w-12 h-12 bg-slate-100 text-slate-500 font-bold rounded-full flex items-center justify-center border-2 border-slate-200 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors z-10 shrink-0">
+                            <span class="material-symbols-outlined">flag</span>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-slate-200 rounded-xl p-6 flex-1 shadow-sm group-hover:border-primary/50 group-hover:shadow-md transition-all">
+                        <h3 class="font-bold text-lg text-slate-900 mb-2">Departure</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">Enjoy your final breakfast at the hotel before checking out. Transfer to the airport for your onward journey with wonderful memories.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT: BOOKING WIDGET -->
+    <div class="lg:col-span-4">
+        <div class="sticky top-28 bg-white border border-slate-200 rounded-2xl shadow-elegant overflow-hidden">
+
+            <!-- Price Header -->
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <div>
+                    <span class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1">Price Starts From</span>
+                    <span class="text-3xl font-extrabold text-slate-900 tracking-tight">৳ {{ package.price|floatformat:0 }}</span>
+                    <span class="text-xs text-slate-500 font-medium">/ person</span>
+                </div>
+            </div>
+
+            <div class="p-6">
+                <!-- Date Picker Mock -->
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Select Date</label>
+                        <div class="relative bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-primary transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">event</span>
+                                <span class="text-sm font-semibold text-slate-900">15 Oct 2026</span>
+                            </div>
+                            <span class="material-symbols-outlined text-slate-400">expand_more</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-2">Travelers</label>
+                        <div class="relative bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-primary transition-colors">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary">person</span>
+                                <span class="text-sm font-semibold text-slate-900">2 Adults</span>
+                            </div>
+                            <span class="material-symbols-outlined text-slate-400">expand_more</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Breakdown -->
+                <div class="space-y-3 border-y border-dashed border-slate-200 py-4 mb-6">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-600">Base Fare (x2)</span>
+                        <span class="font-bold text-slate-900">৳ {% widthratio package.price 1 2 %}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-slate-600">Taxes & Fees</span>
+                        <span class="font-bold text-slate-900">৳ 1,500</span>
+                    </div>
+                </div>
+                
+                <div class="flex justify-between items-center mb-6">
+                    <span class="font-bold text-slate-900">Total Price</span>
+                    <span class="text-xl font-extrabold text-primary">৳ {% widthratio package.price 1 2 as bfare %}{{ bfare|add:"1500" }}</span>
+                </div>
+
+                <!-- CTA -->
+                <a href="{% url 'book_package' package.id %}" class="w-full block text-center py-4 bg-secondary text-slate-900 font-bold text-sm rounded-xl hover:bg-yellow-400 transition-colors shadow-lg shadow-secondary/30 mb-3">
+                    Confirm Booking
+                </a>
+                
+                <p class="text-[11px] text-center text-slate-500 font-medium">You won't be charged yet. Securely powered by <span class="font-bold">TourHobe</span>.</p>
+            </div>
+
+            <!-- Features Banner -->
+            <div class="bg-primary/5 px-6 py-4 flex items-center justify-between border-t border-slate-100">
+                <div class="flex items-center gap-2 text-xs font-bold text-primary">
+                    <span class="material-symbols-outlined text-base">verified</span> Authentic
+                </div>
+                <div class="flex items-center gap-2 text-xs font-bold text-primary">
+                    <span class="material-symbols-outlined text-base">support_agent</span> 24/7 Support
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

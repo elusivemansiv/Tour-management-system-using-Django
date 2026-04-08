@@ -1,0 +1,162 @@
+{% extends "packages/base.html" %}
+{% block title %}Flight Search Results | Tour Hobe{% endblock %}
+
+{% block content %}
+<!-- SEARCH SUMMARY SECTION -->
+<section class="bg-slate-900 border-b border-white py-12">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-2xl">flight_takeoff</span>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">
+                        {{ origin|default:"Anywhere" }} 
+                        <span class="material-symbols-outlined text-sm align-middle mx-2 text-white/40">arrow_forward</span> 
+                        {{ destination|default:"Anywhere" }}
+                    </h1>
+                    <p class="text-sm text-white/50 font-medium">
+                        {{ date|default:"Flexible Date" }} • {{ selected_class|default:"All Classes" }}
+                    </p>
+                </div>
+            </div>
+            <button onclick="window.location.href='/{% if not origin %}{% endif %}'" class="px-6 py-2.5 bg-white/10 text-white font-bold text-sm rounded-xl hover:bg-white/20 transition-colors border border-white/10 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">edit</span> Modify Search
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="max-w-7xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        
+        <!-- SIDEBAR: FILTERS -->
+        <aside class="lg:col-span-3 space-y-8">
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm sticky top-24">
+                <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-50">
+                    <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">filter_alt</span> Filter by
+                    </h3>
+                    <a href="{% url 'flight_list' %}" class="text-xs font-bold text-primary hover:underline uppercase tracking-widest">Reset</a>
+                </div>
+
+                <form method="GET" action="{% url 'flight_list' %}" class="space-y-8">
+                    <!-- Preserve search params -->
+                    <input type="hidden" name="origin" value="{{ origin }}">
+                    <input type="hidden" name="destination" value="{{ destination }}">
+                    <input type="hidden" name="date" value="{{ date }}">
+
+                    <!-- Airline Filter -->
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-4">Airlines</label>
+                        <div class="space-y-3">
+                            {% for airline in airlines %}
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" name="airline" value="{{ airline }}" class="w-4 h-4 text-primary rounded border-slate-300 focus:ring-primary">
+                                <span class="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">{{ airline }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Cabin Class Filter -->
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-4">Cabin Class</label>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="class" value="" class="w-4 h-4 text-primary border-slate-300 focus:ring-primary" {% if not selected_class %}checked{% endif %} onchange="this.form.submit()">
+                                <span class="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">All Classes</span>
+                            </label>
+                            {% for class in classes %}
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="radio" name="class" value="{{ class }}" class="w-4 h-4 text-primary border-slate-300 focus:ring-primary" {% if selected_class == class %}checked{% endif %} onchange="this.form.submit()">
+                                <span class="text-sm font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">{{ class }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT: FLIGHT RESULTS -->
+        <main class="lg:col-span-9 space-y-6">
+            <!-- Sorting/Info Bar -->
+            <div class="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl">
+                <p class="text-sm font-bold text-slate-600">Found <span class="text-slate-900">{{ flights.count }}</span> Flights</p>
+                <div class="flex items-center gap-4">
+                    <span class="text-xs font-bold text-slate-400 uppercase">Sort by:</span>
+                    <select class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer p-0">
+                        <option>Cheapest First</option>
+                        <option>Fastest First</option>
+                        <option>Recommended</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- FLIGHT CARDS -->
+            <div class="space-y-4">
+                {% for flight in flights %}
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 hover:border-primary/40 hover:shadow-elegant transition-all group">
+                    <div class="flex flex-col lg:flex-row items-center gap-8 md:gap-12">
+                        
+                        <!-- Airline Logo & Name -->
+                        <div class="lg:w-40 flex lg:flex-col items-center gap-4 text-center">
+                            <div class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center p-2">
+                                {% if flight.logo %}
+                                    <img src="{{ flight.logo.url }}" class="w-full h-full object-contain">
+                                {% else %}
+                                    <span class="material-symbols-outlined text-slate-300 text-3xl">flight</span>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h4 class="font-extrabold text-slate-900 text-sm tracking-tight">{{ flight.airline }}</h4>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ flight.cabin_class }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Route Info -->
+                        <div class="flex-1 w-full grid grid-cols-3 items-center text-center">
+                            <div class="space-y-1">
+                                <p class="text-2xl font-extrabold text-slate-900">{{ flight.departure_time|date:"H:i" }}</p>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ flight.origin }}</p>
+                            </div>
+                            
+                            <div class="relative flex flex-col items-center">
+                                <span class="text-[10px] font-bold text-primary mb-2">Non-stop</span>
+                                <div class="w-full h-px bg-slate-200 relative">
+                                    <span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-primary rotate-90 text-xl">flight</span>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-400 mt-2">Duration: 2h 45m</span>
+                            </div>
+
+                            <div class="space-y-1">
+                                <p class="text-2xl font-extrabold text-slate-900">{{ flight.arrival_time|date:"H:i" }}</p>
+                                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ flight.destination }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Price & Action -->
+                        <div class="lg:w-48 flex flex-col items-center lg:items-end lg:border-l border-slate-100 lg:pl-10 lg:py-2">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Total Fare</p>
+                            <p class="text-2xl font-extrabold text-primary mb-4 tracking-tight">৳ {{ flight.price|floatformat:0 }}</p>
+                            <a href="{% url 'flight_booking' flight.id %}" class="w-full py-3 bg-primary text-white text-center font-bold text-sm rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                                Select Flight
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="py-24 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                    <span class="material-symbols-outlined text-7xl text-slate-200 mb-4">search_off</span>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">No Flights Found</h3>
+                    <p class="text-slate-500">Try adjusting your origin, destination or dates to find a flight.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+</section>
+{% endblock %}
