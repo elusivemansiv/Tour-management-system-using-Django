@@ -1,0 +1,216 @@
+{% extends 'packages/base.html' %}
+{% load static %}
+
+{% block title %}Flight Search - Tour Hobe{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<div class="relative bg-slate-900 text-white min-h-[500px] flex items-center justify-center pt-20 pb-32">
+    <!-- Background Image placeholder (using CSS gradient for now) -->
+    <div class="absolute inset-0 bg-gradient-to-r from-indigo-900 to-purple-900 opacity-80 z-0"></div>
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-6 text-center text-white">Let's find your dream destination!</h1>
+        
+        <!-- Search Widget -->
+        <div class="bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto text-slate-800">
+            <form action="{% url 'flight_list' %}" method="GET">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-6">
+                        <label class="flex items-center gap-2 cursor-pointer font-bold text-sm text-slate-700">
+                            <input type="radio" name="trip_type" value="oneway" checked class="text-primary focus:ring-primary h-4 w-4">
+                            One Way
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer font-bold text-sm text-slate-700">
+                            <input type="radio" name="trip_type" value="round" class="text-primary focus:ring-primary h-4 w-4">
+                            Round Trip
+                        </label>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <select class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-primary focus:border-primary block p-2 font-bold outline-none">
+                            <option>1 Passenger</option>
+                            <option>2 Passengers</option>
+                        </select>
+                        <select class="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-primary focus:border-primary block p-2 font-bold outline-none">
+                            <option>Economy</option>
+                            <option>Business</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="relative">
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">From</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <span class="material-symbols-outlined text-[18px]">flight_takeoff</span>
+                            </span>
+                            <input type="text" name="origin" placeholder="Select Origin" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-bold">
+                        </div>
+                    </div>
+                    
+                    <div class="hidden lg:flex items-center justify-center absolute left-1/2 -translate-x-1/2 top-[55%] z-10">
+                        <div class="w-8 h-8 bg-slate-800 text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:bg-primary transition-colors">
+                            <span class="material-symbols-outlined text-[16px]">sync_alt</span>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">To</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <span class="material-symbols-outlined text-[18px]">flight_land</span>
+                            </span>
+                            <input type="text" name="destination" placeholder="Select Destination" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-bold">
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Departure</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                            </span>
+                            <input type="date" name="date" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-bold text-slate-600">
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Return</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                            </span>
+                            <input type="date" name="return_date" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-bold text-slate-600" disabled>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-center">
+                    <button type="submit" class="bg-primary hover:bg-indigo-700 text-white font-bold py-3 px-12 rounded-xl transition-all shadow-lg shadow-primary/30 w-full md:w-auto text-lg flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">search</span> Find flight
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OFFERS SECTION -->
+<section class="py-20 bg-slate-50 relative -mt-10 z-20">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <h2 class="text-3xl font-extrabold text-slate-900 mb-10">Best Offers</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for offer in offers %}
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow group cursor-pointer border border-slate-100 flex h-32">
+                <div class="w-1/3 bg-orange-100 flex items-center justify-center relative overflow-hidden">
+                    {% if offer.image %}
+                    <img src="{{ offer.image.url }}" alt="{{ offer.title }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <span class="material-symbols-outlined text-4xl text-orange-400">local_offer</span>
+                    {% endif %}
+                    <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors"></div>
+                </div>
+                <div class="w-2/3 p-4 flex flex-col justify-center">
+                    <h3 class="font-extrabold text-slate-900 mb-1 leading-tight group-hover:text-primary transition-colors">{{ offer.title }}</h3>
+                    <p class="text-xs text-slate-500 line-clamp-2 mb-2">{{ offer.description }}</p>
+                    <div class="text-xs font-bold text-orange-600 uppercase">{{ offer.discount_percentage }}% Flat Off</div>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Placeholders -->
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow group cursor-pointer border border-slate-100 flex h-32">
+                <div class="w-1/3 bg-orange-100 flex items-center justify-center relative"><span class="material-symbols-outlined text-4xl text-orange-400">local_offer</span></div>
+                <div class="w-2/3 p-4 flex flex-col justify-center">
+                    <h3 class="font-extrabold text-slate-900 mb-1 leading-tight group-hover:text-primary transition-colors">Summer Sale</h3>
+                    <p class="text-xs text-slate-500 line-clamp-2 mb-2">Book any domestic flight and get up to $50 off.</p>
+                    <div class="text-xs font-bold text-orange-600 uppercase">20% Flat Off</div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow group cursor-pointer border border-slate-100 flex h-32">
+                <div class="w-1/3 bg-blue-100 flex items-center justify-center relative"><span class="material-symbols-outlined text-4xl text-blue-400">credit_card</span></div>
+                <div class="w-2/3 p-4 flex flex-col justify-center">
+                    <h3 class="font-extrabold text-slate-900 mb-1 leading-tight group-hover:text-primary transition-colors">Bank Offer</h3>
+                    <p class="text-xs text-slate-500 line-clamp-2 mb-2">Use Visa card to get exclusive rewards.</p>
+                    <div class="text-xs font-bold text-blue-600 uppercase">10% Flat Off</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- POPULAR DESTINATIONS -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <h2 class="text-3xl font-extrabold text-slate-900 mb-10">Popular Destinations</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {% for dest in destinations %}
+            <div class="group cursor-pointer">
+                <div class="w-full h-40 rounded-2xl overflow-hidden mb-3 relative">
+                    {% if dest.image %}
+                    <img src="{{ dest.image.url }}" alt="{{ dest.city }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    {% else %}
+                    <div class="w-full h-full bg-slate-200 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-4xl text-slate-400">landscape</span>
+                    </div>
+                    {% endif %}
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div class="absolute bottom-3 left-3 text-white">
+                        <h4 class="font-extrabold text-sm">{{ dest.city }}</h4>
+                    </div>
+                </div>
+                <h4 class="font-bold text-slate-900 text-sm group-hover:text-primary transition-colors">{{ dest.country }}</h4>
+                <p class="text-[11px] font-semibold text-slate-400">{{ dest.flight_count }} daily flights</p>
+            </div>
+            {% empty %}
+            <!-- Placeholders -->
+            <div class="group cursor-pointer">
+                <div class="w-full h-40 rounded-2xl overflow-hidden mb-3 relative bg-slate-200"></div>
+                <h4 class="font-bold text-slate-900 text-sm group-hover:text-primary transition-colors">USA</h4>
+                <p class="text-[11px] font-semibold text-slate-400">120 daily flights</p>
+            </div>
+            <div class="group cursor-pointer">
+                <div class="w-full h-40 rounded-2xl overflow-hidden mb-3 relative bg-slate-200"></div>
+                <h4 class="font-bold text-slate-900 text-sm group-hover:text-primary transition-colors">Canada</h4>
+                <p class="text-[11px] font-semibold text-slate-400">85 daily flights</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- BLOG SECTION -->
+<section class="py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="flex justify-between items-end mb-10">
+            <div>
+                <h2 class="text-3xl font-extrabold text-slate-900 mb-2">Latest Travel Blogs</h2>
+                <p class="text-slate-500 font-medium text-sm">Discover tips, tricks and destination guides.</p>
+            </div>
+            <a href="{% url 'blog' %}" class="text-primary font-bold hover:underline text-sm hidden md:block">View all blogs</a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for blog in blogs %}
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 group cursor-pointer">
+                <div class="h-48 overflow-hidden bg-slate-200">
+                    {% if blog.image %}
+                    <img src="{{ blog.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    {% endif %}
+                </div>
+                <div class="p-6">
+                    <div class="text-[10px] font-extrabold uppercase text-primary tracking-wider mb-2">{{ blog.created_at|date:"M d, Y" }}</div>
+                    <h3 class="text-lg font-extrabold text-slate-900 mb-3 group-hover:text-primary transition-colors line-clamp-2">{{ blog.title }}</h3>
+                    <p class="text-sm text-slate-500 line-clamp-3">{{ blog.content|striptags }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <!-- Placeholders -->
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 h-80 flex items-center justify-center text-slate-400">No blogs yet</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

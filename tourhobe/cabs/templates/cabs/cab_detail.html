@@ -1,0 +1,217 @@
+{% extends 'packages/base.html' %}
+{% load static %}
+
+{% block title %}Cab Detail - Tour Hobe{% endblock %}
+
+{% block content %}
+<div class="bg-slate-50 min-h-screen py-10">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm mb-6 border border-slate-100">
+            <h1 class="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                {{ pickup }} <span class="material-symbols-outlined text-slate-400 text-[18px]">arrow_right_alt</span> {{ drop }}
+            </h1>
+            <p class="text-sm font-bold text-slate-500">Outstation - Oneway • {{ date }} - 07:25 PM</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Content -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Cab Main Card -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row gap-6">
+                    <!-- Image -->
+                    <div class="w-full md:w-56 h-36 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
+                        {% if cab.primary_image %}
+                        <img src="{{ cab.primary_image.url }}" alt="{{ cab.title }}" class="max-h-full object-contain p-4">
+                        {% else %}
+                        <span class="material-symbols-outlined text-6xl text-slate-300">directions_car</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h2 class="text-2xl font-extrabold text-slate-900 mb-1">{{ cab.title }}</h2>
+                                <p class="text-xs font-bold text-slate-500 tracking-wide uppercase flex items-center gap-2">
+                                    {{ cab.vehicle_type.name }} • {% if cab.is_ac %}AC{% else %}Non-AC{% endif %} • {{ cab.seats }} Seats
+                                </p>
+                            </div>
+                            <div class="flex text-yellow-400">
+                                <span class="text-[12px]">★</span><span class="text-[12px]">★</span><span class="text-[12px]">★</span><span class="text-[12px]">★</span><span class="text-[12px]">★</span>
+                            </div>
+                        </div>
+                        
+                        <ul class="space-y-2 mb-4">
+                            <li class="flex items-center gap-2 text-xs font-medium text-slate-600"><span class="material-symbols-outlined text-[16px]">speed</span> {{ cab.included_kms }}Kms included. After that ${{ cab.price_per_extra_km }}/Kms</li>
+                            <li class="flex items-center gap-2 text-xs font-medium text-slate-600"><span class="material-symbols-outlined text-[16px]">luggage</span> {{ cab.max_luggage }} luggage bags</li>
+                            <li class="flex items-center gap-2 text-xs font-medium text-slate-600"><span class="material-symbols-outlined text-[16px]">local_gas_station</span> {{ cab.fuel_type }} Car</li>
+                        </ul>
+                        
+                        <div class="flex gap-4">
+                            <div class="bg-green-50 text-green-600 text-xs font-bold px-3 py-1.5 rounded-lg border border-green-100">{{ cab.cancellation_policy }}</div>
+                            <div class="bg-green-50 text-green-600 text-xs font-bold px-3 py-1.5 rounded-lg border border-green-100">{{ cab.waiting_policy }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Section wrapper (simulating Trip Details entry) -->
+                <form action="{% url 'cab_checkout' cab.id %}" method="POST" class="space-y-6">
+                    {% csrf_token %}
+                    <input type="hidden" name="total_amount" value="{{ total|floatformat:0 }}">
+                    <input type="hidden" name="pickup" value="{{ pickup }}">
+                    <input type="hidden" name="drop" value="{{ drop }}">
+                    
+                    <!-- Trip Details Form -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-6">Trip Details</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-2">Pickup Address</label>
+                                <input type="text" placeholder="38 new resort, New York" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:border-primary">
+                                <p class="text-[10px] text-slate-400 mt-2">This will help our cab driver reach you on time.</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 mb-2">Drop Address</label>
+                                <input type="text" placeholder="street profit, New York" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:border-primary">
+                            </div>
+                        </div>
+                        
+                        <h4 class="text-sm font-extrabold text-slate-900 mb-4">Traveler Information</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="flex gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-2">Gender</label>
+                                    <div class="flex bg-slate-100 rounded-xl p-1">
+                                        <div class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg cursor-pointer">Male</div>
+                                        <div class="text-slate-600 text-xs font-bold px-4 py-2 rounded-lg cursor-pointer">Female</div>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-xs font-bold text-slate-500 mb-2">Name</label>
+                                    <input type="text" name="first_name" placeholder="Enter your name" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:border-primary" required>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-2">Email id</label>
+                                    <input type="email" name="email" placeholder="Enter your email" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:border-primary" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 mb-2">Mobile number</label>
+                                    <input type="text" name="phone" placeholder="Enter your mobile number" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-semibold outline-none focus:border-primary" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Driver and Cab details text -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-4">Driver and Cab details</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-sm text-slate-600 font-medium mb-6">
+                            <li>Cab and driver details will be shared on your registered phone. (22 Jan 2021 at 6:55 pm)</li>
+                            <li>Due to traffic or any other unavoidable reason, the pickup may be delayed for 30 minutes.</li>
+                            <li>For nighttime driving (between 11:00 pm to 7:00 am) on any of the nights, there will be a night driver charge of $100.</li>
+                        </ul>
+                        
+                        <h4 class="text-sm font-extrabold text-slate-900 mb-3">Cab Images</h4>
+                        <div class="bg-yellow-50 text-yellow-700 text-xs font-medium p-3 rounded-lg mb-4">
+                            All pictures shown are for illustration purpose only. The actual product may vary due to product enhancement.
+                        </div>
+                        
+                        <div class="flex gap-4 overflow-x-auto pb-4">
+                            {% for img in cab.gallery_images.all %}
+                            <div class="w-48 h-32 rounded-xl bg-slate-200 shrink-0 overflow-hidden">
+                                <img src="{{ img.image.url }}" alt="Cab" class="w-full h-full object-cover">
+                            </div>
+                            {% empty %}
+                            <!-- Placeholders -->
+                            <div class="w-48 h-32 rounded-xl bg-slate-200 shrink-0"></div>
+                            <div class="w-48 h-32 rounded-xl bg-slate-200 shrink-0"></div>
+                            <div class="w-48 h-32 rounded-xl bg-slate-200 shrink-0"></div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Inclusion & Exclusion -->
+                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-extrabold text-slate-900 mb-4 border-b border-slate-100 pb-4">Inclusion & Exclusion</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-sm font-extrabold text-slate-900 mb-4">Included in your price</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center gap-2 text-sm text-slate-500 font-medium"><span class="material-symbols-outlined text-green-500 text-[18px]">check</span> State tax</li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-500 font-medium"><span class="material-symbols-outlined text-green-500 text-[18px]">check</span> Toll charge</li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-500 font-medium"><span class="material-symbols-outlined text-green-500 text-[18px]">check</span> Driver Allowance</li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-500 font-medium"><span class="material-symbols-outlined text-green-500 text-[18px]">check</span> Only one pickup and drop</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-extrabold text-slate-900 mb-4">Extra charge</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-center gap-2 text-sm text-slate-500 font-medium"><span class="material-symbols-outlined text-red-500 text-[18px]">close</span> Fare beyond 600Kms</li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-500 font-medium"><span class="material-symbols-outlined text-red-500 text-[18px]">close</span> Airport entry charge</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submission trigger is in the sidebar -->
+                    <button type="submit" id="hiddenSubmitBtn" class="hidden"></button>
+                </form>
+            </div>
+
+            <!-- Right Sidebar: Price & Payment -->
+            <div class="lg:col-span-4">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm sticky top-24">
+                    <div class="text-xs font-bold text-red-500 mb-4">Hurry! Limited cars left</div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between text-sm font-medium text-slate-600">
+                            <span>Base Price</span>
+                            <span>${{ base_price|floatformat:0 }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-medium text-slate-600">
+                            <span>State Tax</span>
+                            <span>${{ state_tax|floatformat:0 }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-medium text-slate-600">
+                            <span>Night Charge</span>
+                            <span>${{ night_charge|floatformat:0 }}</span>
+                        </div>
+                        <div class="flex justify-between text-sm font-medium text-slate-600">
+                            <span>Convenience Fee</span>
+                            <span>${{ conv_fee|floatformat:0 }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center py-4 border-t border-slate-200 mb-6">
+                        <span class="text-lg font-extrabold text-slate-900">Total</span>
+                        <span class="text-xl font-extrabold text-slate-900">${{ total|floatformat:0 }}</span>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <label class="flex items-center gap-3 cursor-pointer group p-3 border border-indigo-200 bg-indigo-50 rounded-xl">
+                            <input type="radio" name="payment_mode" checked class="text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+                            <span class="text-sm font-bold text-indigo-900">Pay ${{ total|add:"-150"|floatformat:0 }} now (Half Payment)</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer group p-3 border border-slate-200 hover:bg-slate-100 rounded-xl transition-colors">
+                            <input type="radio" name="payment_mode" class="text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+                            <span class="text-sm font-bold text-slate-700">Pay ${{ total|floatformat:0 }} now (Full payment)</span>
+                        </label>
+                    </div>
+                    
+                    <a href="{% url 'cab_checkout' cab.id %}" class="w-full block text-center bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl transition-all shadow-lg text-sm">
+                        Proceed To Checkout
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Hotel
+from bookings.models import HotelBooking
 
 
 def hotel_detail(request, pk):
@@ -49,3 +52,24 @@ def hotel_list(request):
         'selected_tier': tier_filter,
         'selected_star': star_filter,
     })
+
+@login_required
+def hotel_checkout(request, pk):
+    hotel = get_object_or_404(Hotel, pk=pk)
+    
+    if request.method == 'POST':
+        HotelBooking.objects.create(
+            user=request.user,
+            hotel=hotel,
+            full_name=request.POST.get('full_name'),
+            phone=request.POST.get('phone'),
+            email=request.POST.get('email', request.user.email),
+            check_in=request.POST.get('check_in'),
+            check_out=request.POST.get('check_out'),
+            guests=request.POST.get('guests', 1),
+            total_amount=hotel.price_per_night # Just using base price for now
+        )
+        messages.success(request, 'Hotel booking request submitted!')
+        return redirect('my_bookings')
+        
+    return render(request, 'hotels/hotel_checkout.html', {'hotel': hotel})

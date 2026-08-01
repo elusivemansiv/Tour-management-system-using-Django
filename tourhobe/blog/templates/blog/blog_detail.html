@@ -1,0 +1,222 @@
+{% extends "packages/base.html" %}
+{% block title %}{{ post.title }} | Tour Hobe{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Styling for CKEditor Content */
+    .blog-content {
+        font-family: inherit;
+        color: #475569; /* text-slate-600 */
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+    .blog-content p {
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Drop Cap for first paragraph */
+    .blog-content > p:first-of-type::first-letter {
+        float: left;
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1;
+        padding-right: 0.5rem;
+        padding-top: 0.25rem;
+        color: #4f46e5; /* text-indigo-600 */
+        font-family: 'Georgia', serif;
+    }
+
+    .blog-content h2, .blog-content h3, .blog-content h4 {
+        color: #0f172a; /* text-slate-900 */
+        font-weight: 800;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .blog-content h2 { font-size: 1.75rem; }
+    .blog-content h3 { font-size: 1.5rem; }
+    
+    .blog-content img {
+        border-radius: 1rem;
+        margin: 2rem 0;
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Floating images support */
+    .blog-content img[style*="float: right"] {
+        margin: 1rem 0 1rem 2rem;
+    }
+    .blog-content img[style*="float: left"] {
+        margin: 1rem 2rem 1rem 0;
+    }
+
+    .blog-content ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .blog-content ol {
+        list-style-type: decimal;
+        padding-left: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .blog-content blockquote {
+        background-color: #f8fafc; /* bg-slate-50 */
+        border-radius: 1rem;
+        padding: 2rem;
+        margin: 2.5rem 0;
+        font-weight: 600;
+        color: #1e293b;
+        text-align: center;
+        position: relative;
+    }
+    .blog-content blockquote p {
+        margin-bottom: 0;
+    }
+    .blog-content blockquote::before {
+        content: "❝";
+        color: #cbd5e1;
+        font-size: 2rem;
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+    }
+</style>
+
+<main class="max-w-4xl mx-auto px-6 lg:px-8 py-10">
+    
+    <!-- Hero Image & Header -->
+    <div class="relative w-full h-[500px] rounded-[2rem] overflow-hidden shadow-lg mb-32">
+        {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="absolute inset-0 w-full h-full object-cover">
+        {% else %}
+        <div class="absolute inset-0 w-full h-full bg-slate-300"></div>
+        {% endif %}
+        
+        <!-- White overlapping card -->
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-24 w-[90%] md:w-[80%] bg-white rounded-[2rem] p-8 md:p-12 shadow-2xl z-10 text-center">
+            {% if post.category %}
+            <span class="{{ post.category.color_class }} text-white text-[10px] font-bold px-3 py-1.5 rounded uppercase tracking-wide inline-block mb-6 shadow-sm">
+                {{ post.category.name }}
+            </span>
+            {% endif %}
+            
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 leading-tight mb-4">{{ post.title }}</h1>
+            
+            <p class="text-slate-500 text-sm md:text-base leading-relaxed mb-8 max-w-2xl mx-auto">
+                {{ post.excerpt }}
+            </p>
+            
+            <div class="flex items-center justify-center gap-4 text-sm text-slate-500">
+                <div class="flex items-center gap-3">
+                    {% if post.author_avatar %}
+                    <img src="{{ post.author_avatar.url }}" alt="{{ post.author_name }}" class="w-10 h-10 rounded-full object-cover shadow-sm">
+                    {% else %}
+                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                        {{ post.author_name|make_list|first }}
+                    </div>
+                    {% endif %}
+                    <span class="font-bold text-slate-900">{{ post.author_name }}</span>
+                </div>
+                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                <span>{{ post.date_posted|date:"M d, Y" }}</span>
+                <span class="w-1 h-1 rounded-full bg-slate-300"></span>
+                <span>{{ post.read_time }} min read</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Spacer for overlapping card -->
+    <div class="h-10 md:h-16"></div>
+
+    <!-- Article Content (Rich Text) -->
+    <article class="blog-content mb-24 max-w-3xl mx-auto">
+        {% if post.content %}
+            {{ post.content|safe }}
+        {% else %}
+            <p>This post has no content yet.</p>
+        {% endif %}
+    </article>
+
+    <!-- Author Box -->
+    <div class="max-w-3xl mx-auto border border-slate-100 bg-white rounded-3xl p-8 mb-12 shadow-sm flex flex-col md:flex-row gap-8 items-start">
+        <div class="shrink-0">
+            {% if post.author_avatar %}
+            <img src="{{ post.author_avatar.url }}" alt="{{ post.author_name }}" class="w-20 h-20 rounded-full object-cover shadow-md">
+            {% else %}
+            <div class="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-3xl shadow-md">
+                {{ post.author_name|make_list|first }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="flex-grow">
+            <h3 class="font-bold text-slate-900 text-xl">{{ post.author_name }}</h3>
+            <p class="text-xs font-semibold text-slate-400 mb-4">{{ post.author_role }}</p>
+            <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                {{ post.author_bio|default:"No biography provided for this author." }}
+            </p>
+            
+            <div class="flex items-center justify-between w-full">
+                <div class="flex gap-4">
+                    {% if post.author_facebook %}
+                    <a href="{{ post.author_facebook }}" class="text-slate-400 hover:text-blue-600 transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                    {% endif %}
+                    {% if post.author_twitter %}
+                    <a href="{{ post.author_twitter }}" class="text-slate-400 hover:text-blue-400 transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                    {% endif %}
+                    {% if post.author_linkedin %}
+                    <a href="{{ post.author_linkedin }}" class="text-slate-400 hover:text-blue-700 transition-colors"><i class="fa-brands fa-linkedin-in"></i></a>
+                    {% endif %}
+                </div>
+                <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-5 rounded-lg text-xs transition-colors">
+                    View Articles
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Box -->
+    <div class="max-w-3xl mx-auto bg-slate-50 rounded-2xl p-6 flex flex-col sm:flex-row justify-between items-center gap-4 mb-12">
+        <h4 class="font-bold text-slate-900">Was this article helpful?</h4>
+        <p class="text-xs text-slate-500 font-medium">35 out of 79 found this helpful</p>
+        <div class="flex gap-2">
+            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-semibold py-1.5 px-4 rounded-lg text-xs flex items-center gap-2 transition-colors">
+                <i class="fa-regular fa-thumbs-up"></i> Yes
+            </button>
+            <button class="border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-semibold py-1.5 px-4 rounded-lg text-xs flex items-center gap-2 transition-colors">
+                No <i class="fa-regular fa-thumbs-down"></i>
+            </button>
+        </div>
+    </div>
+
+    <hr class="border-slate-100 max-w-3xl mx-auto mb-8">
+
+    <!-- Share & Tags -->
+    <div class="max-w-3xl mx-auto flex flex-col md:flex-row justify-between gap-8 mb-16">
+        <div>
+            <h4 class="font-bold text-slate-900 text-sm mb-4">Share on:</h4>
+            <div class="flex gap-4">
+                <a href="#" class="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1.5"><i class="fa-brands fa-facebook-f"></i> Facebook</a>
+                <a href="#" class="text-xs font-semibold text-pink-500 hover:text-pink-600 flex items-center gap-1.5"><i class="fa-brands fa-instagram"></i> Instagram</a>
+                <a href="#" class="text-xs font-semibold text-sky-500 hover:text-sky-600 flex items-center gap-1.5"><i class="fa-brands fa-twitter"></i> Twitter</a>
+            </div>
+        </div>
+        <div>
+            <h4 class="font-bold text-slate-900 text-sm mb-4">Popular Tags:</h4>
+            <div class="flex flex-wrap gap-2">
+                {% for tag in post.tags.all %}
+                <span class="border border-slate-200 text-slate-700 text-[10px] font-bold px-3 py-1.5 rounded bg-white">{{ tag.name }}</span>
+                {% empty %}
+                <span class="text-xs text-slate-400">No tags.</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

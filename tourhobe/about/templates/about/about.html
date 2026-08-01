@@ -1,0 +1,114 @@
+{% extends "packages/base.html" %}
+{% block title %}About Us | Tour Hobe{% endblock %}
+
+{% block content %}
+
+<main class="max-w-7xl mx-auto px-6 lg:px-8 py-20 overflow-hidden">
+    
+    <!-- Hero Header -->
+    <div class="max-w-3xl mx-auto text-center mb-16">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6 tracking-tight">
+            {{ hero.title }}
+        </h1>
+        <p class="text-slate-500 text-sm md:text-base leading-relaxed mb-10 max-w-2xl mx-auto">
+            {{ hero.description }}
+        </p>
+        
+        <!-- Stats Badges -->
+        <div class="flex flex-wrap justify-center gap-4">
+            {% if hero.stat1_text %}
+            <div class="bg-white px-5 py-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-50 flex items-center gap-3">
+                <span class="text-xl">{{ hero.stat1_icon }}</span>
+                <span class="font-bold text-slate-900 text-sm">{{ hero.stat1_text }}</span>
+            </div>
+            {% endif %}
+            {% if hero.stat2_text %}
+            <div class="bg-white px-5 py-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-50 flex items-center gap-3">
+                <span class="text-xl">{{ hero.stat2_icon }}</span>
+                <span class="font-bold text-slate-900 text-sm">{{ hero.stat2_text }}</span>
+            </div>
+            {% endif %}
+            {% if hero.stat3_text %}
+            <div class="bg-white px-5 py-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-50 flex items-center gap-3">
+                <span class="text-xl">{{ hero.stat3_icon }}</span>
+                <span class="font-bold text-slate-900 text-sm">{{ hero.stat3_text }}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Photo Collage -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-32">
+        <!-- Main Left Image -->
+        <div class="md:col-span-5 flex items-end">
+            {% if hero.main_image %}
+            <img src="{{ hero.main_image.url }}" alt="About Image" class="w-full h-[400px] object-cover rounded-[32px] shadow-lg">
+            {% endif %}
+        </div>
+        
+        <!-- Right Side Images -->
+        <div class="md:col-span-7 flex flex-col gap-6">
+            <!-- Top Right Image -->
+            <div class="flex justify-start">
+                {% if hero.top_right_image %}
+                <img src="{{ hero.top_right_image.url }}" alt="About Image" class="w-4/5 h-[240px] object-cover rounded-[32px] shadow-lg">
+                {% endif %}
+            </div>
+            <!-- Bottom Right Image -->
+            <div class="flex justify-end">
+                {% if hero.bottom_right_image %}
+                <img src="{{ hero.bottom_right_image.url }}" alt="About Image" class="w-full h-[320px] object-cover rounded-[32px] shadow-lg">
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Our Story Section -->
+    <div class="mb-32">
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-8">{{ story.title }}</h2>
+        
+        <div class="text-slate-500 text-sm md:text-base leading-loose space-y-6 max-w-6xl mb-20">
+            {% if story %}
+            <p>{{ story.paragraph1 }}</p>
+            {% if story.paragraph2 %}<p>{{ story.paragraph2 }}</p>{% endif %}
+            {% endif %}
+        </div>
+
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            {% for feature in features %}
+            <div>
+                <div class="w-12 h-12 bg-{{ feature.color_class }}-50 text-{{ feature.color_class }}-500 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                    <i class="{{ feature.icon_class }}"></i>
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg mb-3">{{ feature.title }}</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    {{ feature.description }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Our Team Section -->
+    <div>
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-12">Our Team</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for member in team %}
+            <div class="group">
+                <div class="w-full h-80 rounded-[32px] overflow-hidden mb-6 shadow-md relative">
+                    {% if member.image %}
+                    <img src="{{ member.image.url }}" alt="{{ member.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    {% endif %}
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg">{{ member.name }}</h3>
+                <p class="text-xs text-slate-500 mt-1">{{ member.role }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</main>
+
+{% endblock %}

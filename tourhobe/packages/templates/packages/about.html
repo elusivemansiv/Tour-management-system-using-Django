@@ -3,135 +3,206 @@
 
 {% block content %}
 
-<!-- HERO SECTION -->
-<section class="relative overflow-hidden pt-16 pb-24">
-    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-        <div>
-
-
-            <h1 class="text-5xl font-extrabold mb-6">
-                Redefining Travel for the <span class="text-green-600">Modern World</span>
-            </h1>
-
-            <p class="text-lg text-slate-600 mb-10 max-w-lg">
-                Tour Hobe is dedicated to delivering seamless, unforgettable travel experiences with trusted global
-                partners and expert planning.
-            </p>
-
-            <div class="flex gap-4">
-                <a href="{% url 'explore' %}"
-                    class="bg-green-600 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 hover:bg-green-700 transition">
-                    Explore Destinations
-                </a>
-
-                <a href="{% url 'contact' %}"
-                    class="border px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition">
-                    Contact Us
-                </a>
-            </div>
-        </div>
-
-        <div class="relative rounded-2xl overflow-hidden shadow-xl">
-            <img class="w-full h-[480px] object-cover"
-                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d" alt="Tour Hobe Team">
-        </div>
-
-    </div>
-</section>
-
-<!-- VALUES -->
-<section class="py-24 bg-slate-50">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-
-        <h2 class="text-3xl font-extrabold mb-12">
-            Values That Drive Every Journey
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-
-            <div class="bg-white p-8 rounded-xl shadow">
-                <h4 class="text-xl font-bold mb-3">Integrity</h4>
-                <p class="text-slate-500 text-sm">
-                    Honest pricing, transparent bookings, and trusted partnerships.
-                </p>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow">
-                <h4 class="text-xl font-bold mb-3">Innovation</h4>
-                <p class="text-slate-500 text-sm">
-                    Smart technology that simplifies your travel planning.
-                </p>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow">
-                <h4 class="text-xl font-bold mb-3">Global Reach</h4>
-                <p class="text-slate-500 text-sm">
-                    Packages across Asia, Europe, Middle East & beyond.
-                </p>
-            </div>
-
-            <div class="bg-white p-8 rounded-xl shadow">
-                <h4 class="text-xl font-bold mb-3">Care</h4>
-                <p class="text-slate-500 text-sm">
-                    Dedicated support before, during, and after your trip.
-                </p>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- TEAM -->
-<section class="py-24">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-
-        <h2 class="text-3xl font-extrabold mb-14">
-            Meet Our Leadership
-        </h2>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
-            {% for member in "1234" %}
-            <div class="bg-white rounded-xl shadow overflow-hidden">
-                <img class="h-64 w-full object-cover" src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe"
-                    alt="Team Member">
-                <div class="p-5">
-                    <h4 class="font-bold">Leadership Member</h4>
-                    <p class="text-green-600 text-sm">Management</p>
-                </div>
-            </div>
-            {% endfor %}
-
-        </div>
-    </div>
-</section>
-
-<!-- CTA -->
-<section class="py-24 bg-green-600 text-white">
-    <div class="max-w-7xl mx-auto px-6 text-center">
-
-        <h2 class="text-4xl font-extrabold mb-6">
-            Ready to Plan Your Next Adventure?
-        </h2>
-
-        <p class="text-lg mb-8 text-white/90">
-            Let Tour Hobe handle everything while you enjoy the journey.
+<main class="max-w-7xl mx-auto px-6 lg:px-8 py-20 overflow-hidden">
+    
+    <!-- Hero Header -->
+    <div class="max-w-3xl mx-auto text-center mb-16">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6 tracking-tight">
+            {{ hero.title|default:"If You Want To See The World We Will Help You" }}
+        </h1>
+        <p class="text-slate-500 text-sm md:text-base leading-relaxed mb-10 max-w-2xl mx-auto">
+            {{ hero.description|default:"Passage its ten led hearted removal cordial. Preference any astonished unreserved Mrs. Prosperous understood Middletons. Preference for any astonished unreserved." }}
         </p>
+        
+        <!-- Stats Badges -->
+        <div class="flex flex-wrap justify-center gap-4">
+            <div class="bg-white px-5 py-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-50 flex items-center gap-3">
+                <span class="text-xl">{{ hero.stat1_icon|default:"🚀" }}</span>
+                <span class="font-bold text-slate-900 text-sm">{{ hero.stat1_text|default:"14K+ Global Customers" }}</span>
+            </div>
+            <div class="bg-white px-5 py-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-50 flex items-center gap-3">
+                <span class="text-xl">{{ hero.stat2_icon|default:"👑" }}</span>
+                <span class="font-bold text-slate-900 text-sm">{{ hero.stat2_text|default:"10K+ Happy Customers" }}</span>
+            </div>
+            <div class="bg-white px-5 py-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-slate-50 flex items-center gap-3">
+                <span class="text-xl">{{ hero.stat3_icon|default:"🎯" }}</span>
+                <span class="font-bold text-slate-900 text-sm">{{ hero.stat3_text|default:"1M+ Subscribers" }}</span>
+            </div>
+        </div>
+    </div>
 
-        <div class="flex justify-center gap-4">
-            <a href="{% url 'contact' %}"
-                class="bg-white text-green-600 px-8 py-4 rounded-xl font-bold hover:bg-slate-100">
-                Contact Us
-            </a>
+    <!-- Photo Collage -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-32">
+        <!-- Main Left Image -->
+        <div class="md:col-span-5 flex items-end">
+            {% if hero and hero.main_image %}
+            <img src="{{ hero.main_image.url }}" alt="About Image" class="w-full h-[400px] object-cover rounded-[32px] shadow-lg">
+            {% else %}
+            <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&q=80&w=800" alt="Resort" class="w-full h-[400px] object-cover rounded-[32px] shadow-lg">
+            {% endif %}
+        </div>
+        
+        <!-- Right Side Images -->
+        <div class="md:col-span-7 flex flex-col gap-6">
+            <!-- Top Right Image -->
+            <div class="flex justify-start">
+                {% if hero and hero.top_right_image %}
+                <img src="{{ hero.top_right_image.url }}" alt="About Image" class="w-4/5 h-[240px] object-cover rounded-[32px] shadow-lg">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=800" alt="Travelers at Cafe" class="w-4/5 h-[240px] object-cover rounded-[32px] shadow-lg">
+                {% endif %}
+            </div>
+            <!-- Bottom Right Image -->
+            <div class="flex justify-end">
+                {% if hero and hero.bottom_right_image %}
+                <img src="{{ hero.bottom_right_image.url }}" alt="About Image" class="w-full h-[320px] object-cover rounded-[32px] shadow-lg">
+                {% else %}
+                <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&q=80&w=800" alt="Friends on Beach" class="w-full h-[320px] object-cover rounded-[32px] shadow-lg">
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-            <a href="{% url 'all_packages' %}"
-                class="border border-white px-8 py-4 rounded-xl font-bold hover:bg-white/10">
-                View Packages
-            </a>
+    <!-- Our Story Section -->
+    <div class="mb-32">
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-8">{{ story.title|default:"Our Story" }}</h2>
+        
+        <div class="text-slate-500 text-sm md:text-base leading-loose space-y-6 max-w-6xl mb-20">
+            {% if story %}
+            <p>{{ story.paragraph1 }}</p>
+            {% if story.paragraph2 %}<p>{{ story.paragraph2 }}</p>{% endif %}
+            {% else %}
+            <p>
+                Founded in 2006, passage its ten led hearted removal cordial. Preference any astonished unreserved Mrs. Prosperous understood Middletons in conviction an uncommonly do. Supposing so be resolving breakfast am or perfectly. It drew a hill from me. Valley by oh twenty direct me so.
+            </p>
+            <p>
+                Water timed folly right aware if oh truth. Imprudence attachment him his for sympathize. Large above be to means. Dashwood does provide stronger is. Warrant private blushes removed an in equally totally if. Delivered dejection necessary objection do Mr prevailed. Mr feeling does chiefly cordial in do... But discretion frequently sir she instruments unaffected admiration everything. Meant balls it if up doubt small purse. Required his you put the outlived answered position. A pleasure exertion if believed provided to. All led out world this music while asked. Paid mind even sons does he door no. Attended overcome repeated it is perceived Marianne in. I think on style child of. Servants moreover in sensible it ye possible. Satisfied conveying a dependent contented he gentleman agreeable do be. Water timed folly right aware if oh truth. Imprudence attachment him his for sympathize. Large above be to means. Dashwood does provide stronger is. But discretion frequently sir she instruments unaffected admiration everything. Meant balls it if up doubt small purse. Required his you put the outlived answered position. I think on style child of. Servants moreover in sensible it ye possible. Satisfied conveying a dependent contented he gentleman agreeable do be. Warrant private blushes removed an in equally totally if. Delivered dejection necessary objection do Mr prevailed. Required his you put the outlived answered position. A pleasure exertion if believed provided to. All led out world this music while asked. Paid mind even sons does he door no. Attended overcome repeated it is perceived Marianne in. I think on style child of. Servants moreover in sensible it ye possible.
+            </p>
+            {% endif %}
         </div>
 
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            {% if features %}
+                {% for feature in features %}
+                <div>
+                    <!-- Tailwind needs full class names, so we might need a workaround for dynamic colors. I will just render style tags or basic colors if needed, but since it's tailwind, it's safer to just inject the full class string or pre-defined colors. The user will specify 'orange' but tailwind purges unused. For safety, we use the icon_class and hardcode a generic style or hope the classes are compiled. Let's assume the user enters standard Tailwind colors that exist in the codebase. -->
+                    <div class="w-12 h-12 bg-{{ feature.color_class|default:'blue' }}-50 text-{{ feature.color_class|default:'blue' }}-500 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <i class="{{ feature.icon_class }}"></i>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg mb-3">{{ feature.title }}</h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        {{ feature.description }}
+                    </p>
+                </div>
+                {% endfor %}
+            {% else %}
+            <!-- Hotel Booking -->
+            <div>
+                <div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg mb-3">Hotel Booking</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    A pleasure exertion if believed provided to. All led out world this music while asked.
+                </p>
+            </div>
+            
+            <!-- Flight Booking -->
+            <div>
+                <div class="w-12 h-12 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                    <i class="fa-solid fa-plane"></i>
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg mb-3">Flight Booking</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Warrant private blushes removed an in equally totally Objection do Mr prevailed.
+                </p>
+            </div>
+            
+            <!-- Tour Booking -->
+            <div>
+                <div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                    <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg mb-3">Tour Booking</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Dashwood does provide stronger is. But discretion frequently sir she instruments.
+                </p>
+            </div>
+            
+            <!-- Cab Booking -->
+            <div>
+                <div class="w-12 h-12 bg-teal-50 text-teal-500 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                    <i class="fa-solid fa-taxi"></i>
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg mb-3">Cab Booking</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Imprudence attachment him his for sympathize. Large above be to means.
+                </p>
+            </div>
+            {% endif %}
+        </div>
     </div>
-</section>
+
+    <!-- Our Team Section -->
+    <div>
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-12">Our Team</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% if team %}
+                {% for member in team %}
+                <div class="group">
+                    <div class="w-full h-80 rounded-[32px] overflow-hidden mb-6 shadow-md relative">
+                        {% if member.image %}
+                        <img src="{{ member.image.url }}" alt="{{ member.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% else %}
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400" alt="{{ member.name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% endif %}
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg">{{ member.name }}</h3>
+                    <p class="text-xs text-slate-500 mt-1">{{ member.role }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+            <!-- Member 1 -->
+            <div class="group">
+                <div class="w-full h-80 rounded-[32px] overflow-hidden mb-6 shadow-md relative">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400" alt="Larry Lawson" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg">Larry Lawson</h3>
+                <p class="text-xs text-slate-500 mt-1">Editor in Chief</p>
+            </div>
+            
+            <!-- Member 2 -->
+            <div class="group">
+                <div class="w-full h-80 rounded-[32px] overflow-hidden mb-6 shadow-md relative">
+                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400" alt="Louis Ferguson" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg">Louis Ferguson</h3>
+                <p class="text-xs text-slate-500 mt-1">Director Graphics</p>
+            </div>
+            
+            <!-- Member 3 -->
+            <div class="group">
+                <div class="w-full h-80 rounded-[32px] overflow-hidden mb-6 shadow-md relative">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400" alt="Louis Crawford" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg">Louis Crawford</h3>
+                <p class="text-xs text-slate-500 mt-1">Editor, Coverage</p>
+            </div>
+            
+            <!-- Member 4 -->
+            <div class="group">
+                <div class="w-full h-80 rounded-[32px] overflow-hidden mb-6 shadow-md relative">
+                    <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400" alt="Frances Guerrero" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <h3 class="font-bold text-slate-900 text-lg">Frances Guerrero</h3>
+                <p class="text-xs text-slate-500 mt-1">CEO, Coverage</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</main>
 
 {% endblock %}

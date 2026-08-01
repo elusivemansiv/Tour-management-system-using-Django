@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import home, location_packages
 from . import views
+from about.views import about
+from blog.views import blog_page, blog_detail
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -10,5 +12,7 @@ urlpatterns = [
     path('country/<int:country_id>/', views.country_packages, name='country_packages'),
     path('package/<int:pk>/', views.package_detail, name='package_detail'),
     path("contact/", views.contact, name="contact"),
-    path("about/", views.about, name="about"),
+    path("about/", about, name="about"),
+    path("blog/", blog_page, name="blog_page"),
+    path("blog/<int:post_id>/", blog_detail, name="blog_detail"),
 ]

@@ -81,7 +81,7 @@
                 <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
                     <div>
                         <span class="block text-[10px] font-bold text-slate-400 uppercase mb-0.5 tracking-widest">Starting At</span>
-                        <span class="text-xl font-extrabold text-slate-900 tracking-tight">৳{{ package.price|floatformat:0 }}</span>
+                        <span class="text-xl font-extrabold text-slate-900 tracking-tight">$ {{ package.price|floatformat:0 }}</span>
                     </div>
                     <a href="{% url 'package_detail' package.id %}" class="px-6 py-3 bg-secondary text-slate-900 font-bold text-xs rounded-xl hover:bg-yellow-400 transition-all shadow-lg shadow-secondary/20">
                         Explore

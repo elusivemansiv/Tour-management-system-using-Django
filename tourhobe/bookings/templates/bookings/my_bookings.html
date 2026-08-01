@@ -1,28 +1,247 @@
-{% extends "packages/base.html" %}
+{% extends "accounts/base_dashboard.html" %}
 {% block title %}My Bookings{% endblock %}
 
-{% block content %}
-<div class="max-w-4xl mx-auto mt-16">
-    <h2 class="text-2xl font-bold mb-6">My Bookings</h2>
+{% block dashboard_content %}
+<h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-8">My Trips</h1>
 
-    <table class="w-full border">
-        <tr class="bg-slate-100">
-            <th class="p-2">Package</th>
-            <th>Status</th>
-            <th>Date</th>
-        </tr>
-
-        {% for booking in bookings %}
-        <tr class="border-t">
-            <td class="p-2">{{ booking.package.title }}</td>
-            <td>{{ booking.status }}</td>
-            <td>{{ booking.travel_date }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3" class="p-4 text-center">No bookings yet</td>
-        </tr>
-        {% endfor %}
-    </table>
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-2xl border shadow-sm flex items-center justify-between">
+        <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Total Bookings</p>
+            <p class="text-3xl font-black text-slate-900">{{ total_bookings }}</p>
+        </div>
+        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center">
+            <span class="material-symbols-outlined">confirmation_number</span>
+        </div>
+    </div>
+    
+    <div class="bg-white p-6 rounded-2xl border shadow-sm flex items-center justify-between">
+        <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Pending</p>
+            <p class="text-3xl font-black text-orange-500">{{ pending_count }}</p>
+        </div>
+        <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-full flex items-center justify-center">
+            <span class="material-symbols-outlined">hourglass_empty</span>
+        </div>
+    </div>
+    
+    <div class="bg-white p-6 rounded-2xl border shadow-sm flex items-center justify-between">
+        <div>
+            <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Approved/Confirmed</p>
+            <p class="text-3xl font-black text-green-500">{{ approved_count }}</p>
+        </div>
+        <div class="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center">
+            <span class="material-symbols-outlined">check_circle</span>
+        </div>
+    </div>
 </div>
-{% endblock %}
+
+<div x-data="{ activeTab: 'packages' }" class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+    
+    <!-- Tabs -->
+    <div class="flex overflow-x-auto border-b border-slate-200 bg-slate-50/50">
+        <button @click="activeTab = 'packages'" 
+                :class="{ 'border-indigo-600 text-indigo-600 bg-white': activeTab === 'packages', 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50': activeTab !== 'packages' }"
+                class="px-6 py-4 font-bold text-sm border-b-2 transition-colors whitespace-nowrap flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">backpack</span>
+            Packages ({{ bookings.count }})
+        </button>
+        <button @click="activeTab = 'hotels'" 
+                :class="{ 'border-indigo-600 text-indigo-600 bg-white': activeTab === 'hotels', 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50': activeTab !== 'hotels' }"
+                class="px-6 py-4 font-bold text-sm border-b-2 transition-colors whitespace-nowrap flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">hotel</span>
+            Hotels ({{ hotel_bookings.count }})
+        </button>
+        <button @click="activeTab = 'flights'" 
+                :class="{ 'border-indigo-600 text-indigo-600 bg-white': activeTab === 'flights', 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50': activeTab !== 'flights' }"
+                class="px-6 py-4 font-bold text-sm border-b-2 transition-colors whitespace-nowrap flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">flight</span>
+            Flights ({{ flight_bookings.count }})
+        </button>
+        <button @click="activeTab = 'cabs'" 
+                :class="{ 'border-indigo-600 text-indigo-600 bg-white': activeTab === 'cabs', 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50': activeTab !== 'cabs' }"
+                class="px-6 py-4 font-bold text-sm border-b-2 transition-colors whitespace-nowrap flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">local_taxi</span>
+            Cabs ({{ cab_bookings.count }})
+        </button>
+    </div>
+
+    <div class="p-0">
+        <!-- Packages Tab -->
+        <div x-show="activeTab === 'packages'" class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[11px] font-extrabold">
+                    <tr>
+                        <th class="px-6 py-4">Package</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Travel Date</th>
+                        <th class="px-6 py-4">Booked On</th>
+                        <th class="px-6 py-4 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    {% for booking in bookings %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-slate-900">{{ booking.package.title }}</td>
+                        <td class="px-6 py-4">
+                            {% if booking.status == "approved" %}
+                                <span class="inline-flex items-center px-3 py-1 bg-green-50 text-green-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-green-200">Approved</span>
+                            {% elif booking.status == "pending" %}
+                                <span class="inline-flex items-center px-3 py-1 bg-orange-50 text-orange-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-orange-200">Pending</span>
+                            {% else %}
+                                <span class="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-slate-200">{{ booking.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-600">{{ booking.travel_date }}</td>
+                        <td class="px-6 py-4 text-slate-500">{{ booking.created_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'booking_detail' 'package' booking.id %}" class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-500 font-medium">No package bookings yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Hotels Tab -->
+        <div x-show="activeTab === 'hotels'" style="display: none;" class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[11px] font-extrabold">
+                    <tr>
+                        <th class="px-6 py-4">Hotel</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Dates</th>
+                        <th class="px-6 py-4">Booked On</th>
+                        <th class="px-6 py-4 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    {% for booking in hotel_bookings %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-slate-900">{{ booking.hotel.name }}</td>
+                        <td class="px-6 py-4">
+                            {% if booking.status == "approved" %}
+                                <span class="inline-flex items-center px-3 py-1 bg-green-50 text-green-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-green-200">Approved</span>
+                            {% elif booking.status == "pending" %}
+                                <span class="inline-flex items-center px-3 py-1 bg-orange-50 text-orange-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-orange-200">Pending</span>
+                            {% else %}
+                                <span class="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-slate-200">{{ booking.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-600">{{ booking.check_in|date:"M d" }} - {{ booking.check_out|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4 text-slate-500">{{ booking.created_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'booking_detail' 'hotel' booking.id %}" class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-500 font-medium">No hotel bookings yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Flights Tab -->
+        <div x-show="activeTab === 'flights'" style="display: none;" class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[11px] font-extrabold">
+                    <tr>
+                        <th class="px-6 py-4">Flight</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Travel Date</th>
+                        <th class="px-6 py-4">Booked On</th>
+                        <th class="px-6 py-4 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    {% for booking in flight_bookings %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-slate-900">{{ booking.flight.airline }}</span>
+                            <span class="text-xs text-slate-500 ml-2">{{ booking.flight.origin }} → {{ booking.flight.destination }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if booking.status == "approved" %}
+                                <span class="inline-flex items-center px-3 py-1 bg-green-50 text-green-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-green-200">Approved</span>
+                            {% elif booking.status == "pending" %}
+                                <span class="inline-flex items-center px-3 py-1 bg-orange-50 text-orange-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-orange-200">Pending</span>
+                            {% else %}
+                                <span class="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-slate-200">{{ booking.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-600">{{ booking.travel_date|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4 text-slate-500">{{ booking.created_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'booking_detail' 'flight' booking.id %}" class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-500 font-medium">No flight bookings yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Cabs Tab -->
+        <div x-show="activeTab === 'cabs'" style="display: none;" class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[11px] font-extrabold">
+                    <tr>
+                        <th class="px-6 py-4">Cab</th>
+                        <th class="px-6 py-4">Status</th>
+                        <th class="px-6 py-4">Pickup Date</th>
+                        <th class="px-6 py-4">Booked On</th>
+                        <th class="px-6 py-4 text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
+                    {% for booking in cab_bookings %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-slate-900">{{ booking.cab.title }}</span>
+                            <span class="text-xs text-slate-500 ml-2">{{ booking.pickup_city }}</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if booking.status == "confirmed" %}
+                                <span class="inline-flex items-center px-3 py-1 bg-green-50 text-green-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-green-200">Confirmed</span>
+                            {% elif booking.status == "pending" %}
+                                <span class="inline-flex items-center px-3 py-1 bg-orange-50 text-orange-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-orange-200">Pending</span>
+                            {% else %}
+                                <span class="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 text-[11px] font-extrabold uppercase tracking-wider rounded-full border border-slate-200">{{ booking.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-600">{{ booking.pickup_date|date:"M d, Y" }} at {{ booking.pickup_time|time:"H:i" }}</td>
+                        <td class="px-6 py-4 text-slate-500">{{ booking.created_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <a href="{% url 'booking_detail' 'cab' booking.id %}" class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors border border-indigo-100">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-12 text-center text-slate-500 font-medium">No cab bookings yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+{% endblock dashboard_content %}

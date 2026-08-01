@@ -1,0 +1,165 @@
+{% extends "accounts/base_dashboard.html" %}
+{% block title %}Booking Details | Tour Hobe{% endblock %}
+
+{% block dashboard_content %}
+<div class="mb-6 flex items-center gap-4">
+    <a href="{% url 'my_bookings' %}" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-primary hover:text-white transition-colors">
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
+    </a>
+    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Booking Details</h1>
+</div>
+
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <!-- Header with status -->
+    <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Booking ID</p>
+            <p class="text-lg font-black text-slate-900">#BKG-{{ booking_type|upper }}-{{ booking.id|stringformat:"04d" }}</p>
+        </div>
+        <div>
+            {% if booking.status == "approved" or booking.status == "confirmed" %}
+                <span class="inline-flex items-center gap-1.5 px-4 py-2 bg-green-50 text-green-700 text-sm font-extrabold uppercase tracking-wider rounded-xl border border-green-200">
+                    <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                    {{ booking.status }}
+                </span>
+            {% elif booking.status == "pending" %}
+                <span class="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-50 text-orange-700 text-sm font-extrabold uppercase tracking-wider rounded-xl border border-orange-200">
+                    <span class="material-symbols-outlined text-[18px]">hourglass_empty</span>
+                    Pending
+                </span>
+            {% else %}
+                <span class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-100 text-slate-700 text-sm font-extrabold uppercase tracking-wider rounded-xl border border-slate-200">
+                    <span class="material-symbols-outlined text-[18px]">info</span>
+                    {{ booking.status }}
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="p-6">
+        <!-- Item Info -->
+        <div class="flex items-start gap-5 mb-8 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            {% if item_image_url %}
+            <div class="w-20 h-20 rounded-xl overflow-hidden shadow-sm shrink-0">
+                <img src="{{ item_image_url }}" alt="Item" class="w-full h-full object-cover">
+            </div>
+            {% else %}
+            <div class="w-20 h-20 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-300 shadow-sm shrink-0">
+                <span class="material-symbols-outlined text-3xl">image</span>
+            </div>
+            {% endif %}
+            
+            <div>
+                <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider bg-indigo-50 px-2 py-0.5 rounded">{{ booking_type }}</span>
+                <h2 class="text-xl font-bold text-slate-900 mt-1">{{ item_title }}</h2>
+                <p class="text-sm text-slate-500 mt-1">Booked on {{ booking.created_at|date:"F d, Y, h:i A" }}</p>
+            </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Left Col: Traveler details -->
+            <div>
+                <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-slate-100 pb-2">
+                    <span class="material-symbols-outlined text-slate-400 text-lg">person</span>
+                    Traveler Information
+                </h3>
+                
+                <ul class="space-y-4">
+                    {% if booking_type == 'cab' %}
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Name</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.first_name }} {{ booking.last_name }}</p>
+                        </li>
+                    {% else %}
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Name</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.full_name }}</p>
+                        </li>
+                    {% endif %}
+                    
+                    <li>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Phone Number</p>
+                        <p class="text-sm font-semibold text-slate-800">{{ booking.phone }}</p>
+                    </li>
+                    
+                    {% if booking.email %}
+                    <li>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Email Address</p>
+                        <p class="text-sm font-semibold text-slate-800">{{ booking.email }}</p>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Right Col: Itinerary / Order specific -->
+            <div>
+                <h3 class="text-sm font-extrabold text-slate-900 uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-slate-100 pb-2">
+                    <span class="material-symbols-outlined text-slate-400 text-lg">flight_takeoff</span>
+                    Trip Specifics
+                </h3>
+                
+                <ul class="space-y-4">
+                    {% if booking_type == 'package' %}
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Travel Date</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.travel_date|date:"F d, Y" }}</p>
+                        </li>
+                        
+                    {% elif booking_type == 'hotel' %}
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Check-in / Check-out</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.check_in|date:"M d, Y" }} to {{ booking.check_out|date:"M d, Y" }}</p>
+                        </li>
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Guests</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.guests }} Guest(s)</p>
+                        </li>
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Amount</p>
+                            <p class="text-lg font-black text-primary">${{ booking.total_amount }}</p>
+                        </li>
+                        
+                    {% elif booking_type == 'flight' %}
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Travel Date</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.travel_date|date:"F d, Y" }}</p>
+                        </li>
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Passengers & Class</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.passengers }} Passenger(s) - {{ booking.fare_class }}</p>
+                        </li>
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Fare</p>
+                            <p class="text-lg font-black text-primary">${{ booking.total_amount }}</p>
+                        </li>
+                        
+                    {% elif booking_type == 'cab' %}
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Trip Type</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.get_trip_type_display }}</p>
+                        </li>
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Route</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.pickup_city }} → {{ booking.drop_city }}</p>
+                        </li>
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Pickup Date & Time</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.pickup_date|date:"M d, Y" }} at {{ booking.pickup_time|time:"h:i A" }}</p>
+                        </li>
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Pickup Address</p>
+                            <p class="text-sm font-semibold text-slate-800">{{ booking.pickup_address|default:"Not specified" }}</p>
+                        </li>
+                        <li>
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Amount</p>
+                            <p class="text-lg font-black text-primary">${{ booking.total_amount }}</p>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock dashboard_content %}

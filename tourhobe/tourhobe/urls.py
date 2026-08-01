@@ -23,15 +23,16 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path('jet/', include('jet.urls', 'jet')),
-    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),
     path('', include('packages.urls')),
-    path('accounts/', include('accounts.urls')),
-    path('booking/', include('bookings.urls')),
-    path('', include('hotels.urls')),
+    path('hotels/', include('hotels.urls')),
+    path('blog/', include('blog.urls')),
+    path('cabs/', include('cabs.urls')),
+    path('about/', include('about.urls')),
     path('flights/', include('flights.urls')),
-
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('accounts/', include('accounts.urls')),
+    path('bookings/', include('bookings.urls')),
 ]
 
 
