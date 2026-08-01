@@ -60,9 +60,6 @@ To run this project locally on your machine, follow these steps:
    python manage.py runserver
    ```
 
-7. **Access the application**:
-   - Main Site: `http://127.0.0.1:8000`
-   - Admin Panel: `http://127.0.0.1:8000/admin`
 
 ## 📦 Deployment (cPanel)
 
