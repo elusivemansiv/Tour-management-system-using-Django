@@ -1,0 +1,125 @@
+{% extends "packages/base.html" %}
+{% block title %}Checkout | Tour Hobe{% endblock %}
+
+{% block content %}
+
+<form method="post">
+{% csrf_token %}
+
+<div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- LEFT: CUSTOMER INFO -->
+    <div class="lg:col-span-2 space-y-8">
+
+        <!-- Traveler Info -->
+        <section class="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="material-icons-outlined text-green-600">person</span>
+                Traveler Information
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+                <input type="text" name="first_name" placeholder="First Name" class="w-full rounded-lg border p-3" required value="{{ request.user.first_name }}">
+                <input type="text" name="last_name" placeholder="Last Name" class="w-full rounded-lg border p-3" required value="{{ request.user.last_name }}">
+
+                <input type="email" name="email" required
+                       value="{{ request.user.email }}"
+                       placeholder="Email Address"
+                       class="md:col-span-2 w-full rounded-lg border p-3">
+
+                <input type="text" name="phone" required placeholder="Phone Number"
+                       class="w-full rounded-lg border p-3">
+                       
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pickup City</label>
+                        <input type="text" name="pickup" required placeholder="Pickup City"
+                            class="w-full rounded-lg border p-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Drop City</label>
+                        <input type="text" name="drop" required placeholder="Drop City"
+                            class="w-full rounded-lg border p-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
+                        <input type="date" name="pickup_date" required
+                            class="w-full rounded-lg border p-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pickup Time</label>
+                        <input type="time" name="pickup_time" required
+                            class="w-full rounded-lg border p-3">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Method (UI only for now) -->
+        <section class="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="material-icons-outlined text-green-600">payments</span>
+                Payment Method
+            </h2>
+
+            <p class="text-slate-500 text-sm">
+                Payment integration coming soon. This booking will be saved as <b>Pending</b>.
+            </p>
+        </section>
+
+    </div>
+
+    <!-- RIGHT: SUMMARY -->
+    <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl border shadow-lg sticky top-24">
+
+            <div class="p-6">
+                <h3 class="text-lg font-bold mb-4">Booking Summary</h3>
+
+                <div class="relative rounded-lg overflow-hidden mb-4">
+                    {% if cab.primary_image %}
+                    <img src="{{ cab.primary_image.url }}" class="w-full h-32 object-cover">
+                    {% endif %}
+                    <div class="absolute inset-0 bg-black/60 flex flex-col justify-end p-3">
+                        <p class="text-white font-bold">{{ cab.title }}</p>
+                        <p class="text-white/80 text-xs">
+                            {{ cab.vehicle_type.name }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 text-sm">
+                    <div class="flex justify-between">
+                        <span>Base Fare</span>
+                        <span>{{ cab.base_price }} TK</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="flex justify-between text-lg font-bold">
+                        <span>Total Estimate</span>
+                        <span class="text-green-600">{{ cab.base_price }} TK</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t">
+                <input type="hidden" name="total_amount" value="{{ cab.base_price }}">
+                <button type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg">
+                    Confirm Booking
+                </button>
+
+                <p class="text-[11px] text-center text-slate-500 mt-3">
+                    By confirming, you agree to our Terms & Cancellation Policy.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</form>
+
+{% endblock %}

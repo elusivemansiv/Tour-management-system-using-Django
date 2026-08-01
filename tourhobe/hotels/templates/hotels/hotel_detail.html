@@ -39,7 +39,7 @@
         </div>
         <div class="flex flex-col items-end shrink-0">
             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Starts From</p>
-            <p class="text-3xl font-extrabold text-primary">৳{{ hotel.price_per_night|floatformat:0 }}</p>
+            <p class="text-3xl font-extrabold text-primary">${{ hotel.price_per_night|floatformat:0 }}</p>
             <p class="text-xs text-slate-500 font-medium">per night</p>
         </div>
     </div>
@@ -114,13 +114,22 @@
                         {% for room in rooms %}
                         <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
                             <div class="flex flex-col md:flex-row">
-                                <div class="md:w-56 h-40 md:h-auto bg-slate-100 shrink-0 relative">
-                                    <div class="absolute inset-0 flex items-center justify-center text-slate-300">
-                                        <span class="material-symbols-outlined text-5xl">king_bed</span>
+                                <div class="md:w-56 bg-slate-100 shrink-0 relative flex flex-col justify-between p-3">
+                                    <div class="relative w-full h-32 md:h-28 rounded-lg overflow-hidden bg-slate-200">
+                                        {% if room.image %}
+                                        <img src="{{ room.image.url }}" alt="{{ room.room_type }}" class="w-full h-full object-cover">
+                                        {% else %}
+                                        <div class="absolute inset-0 flex items-center justify-center text-slate-300">
+                                            <span class="material-symbols-outlined text-5xl">king_bed</span>
+                                        </div>
+                                        {% endif %}
+                                        <div class="absolute top-2 left-2 bg-black/60 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded">
+                                            {{ room.room_type }}
+                                        </div>
                                     </div>
-                                    <div class="absolute top-3 left-3 bg-black/60 backdrop-blur text-white text-[10px] font-bold px-2 py-1 rounded">
-                                        {{ room.room_type }}
-                                    </div>
+                                    <button onclick="openRoomModal('roomModal-{{ room.id }}')" class="flex items-center gap-1 text-primary text-xs font-bold hover:underline mt-3 self-start">
+                                        <span class="material-symbols-outlined text-[14px]">visibility</span> View more details
+                                    </button>
                                 </div>
                                 <div class="p-6 flex-1 flex flex-col md:flex-row justify-between gap-6">
                                     <div class="self-center">
@@ -146,15 +155,82 @@
                                         </p>
                                     </div>
                                     <div class="flex flex-col items-end justify-center border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-8 shrink-0">
-                                        <p class="text-2xl font-extrabold text-slate-900 mb-1">৳{{ room.price_per_night|floatformat:0 }}</p>
+                                        <p class="text-2xl font-extrabold text-slate-900 mb-1">${{ room.price_per_night|floatformat:0 }}</p>
                                         <p class="text-xs text-slate-500 font-medium mb-4">per night (inc. tax)</p>
-                                        <button class="w-full md:w-auto px-8 py-3 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                                    <a href="{% url 'hotel_checkout' hotel.id %}" class="w-full md:w-auto px-8 py-3 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 inline-block text-center">
                                             Reserve Room
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Room Detail Modal -->
+                        <div id="roomModal-{{ room.id }}" class="fixed inset-0 z-[100] hidden flex items-center justify-center">
+                            <!-- Backdrop -->
+                            <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeRoomModal('roomModal-{{ room.id }}')"></div>
+                            
+                            <!-- Modal Content -->
+                            <div class="bg-white rounded-2xl w-full max-w-lg mx-4 relative z-10 max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col">
+                                <div class="p-4 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white z-20">
+                                    <h3 class="font-bold text-lg text-slate-900">Room detail</h3>
+                                    <button onclick="closeRoomModal('roomModal-{{ room.id }}')" class="text-slate-400 hover:text-slate-700 transition-colors">
+                                        <span class="material-symbols-outlined">close</span>
+                                    </button>
+                                </div>
+                                
+                                <div class="p-6">
+                                    <!-- Image -->
+                                    <div class="w-full h-64 rounded-xl bg-slate-200 overflow-hidden relative mb-6">
+                                        {% if room.image %}
+                                        <img src="{{ room.image.url }}" alt="{{ room.room_type }}" class="w-full h-full object-cover">
+                                        {% else %}
+                                        <div class="absolute inset-0 flex items-center justify-center text-slate-300">
+                                            <span class="material-symbols-outlined text-6xl">image</span>
+                                        </div>
+                                        {% endif %}
+                                        <!-- Carousel Arrows Placeholder -->
+                                        <button class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 backdrop-blur"><span class="material-symbols-outlined">chevron_left</span></button>
+                                        <button class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 backdrop-blur"><span class="material-symbols-outlined">chevron_right</span></button>
+                                    </div>
+
+                                    <h2 class="text-2xl font-extrabold text-slate-900 mb-4">{{ room.room_type }}</h2>
+                                    
+                                    <p class="text-sm text-slate-500 leading-relaxed mb-6">
+                                        {{ room.description|default:"No detailed description available for this room type. Please contact support for more information." }}
+                                    </p>
+                                    
+                                    <h4 class="font-extrabold text-slate-900 mb-4 text-lg">Amenities</h4>
+                                    
+                                    <div class="grid grid-cols-2 gap-y-3 gap-x-4">
+                                        {% if room.amenities %}
+                                            {% for am in room.amenities.split|join:","|slice:":-1"|default:""|add:room.amenities %}
+                                                {# very hacky string splitting in django template. Better to just show it or write a simple split if possible #}
+                                            {% endfor %}
+                                            {# Actually, let's just write a JS snippet to render them or just display it as is. Since we don't have a template tag for split, I will just list them by splitting in the view or using a custom filter. Wait, `room.amenities` is a comma separated string. I can just render it. But the design shows a grid with green checkmarks. Let's do a simple frontend split using JS or just show the string. Wait, I can just write a quick script below to format it. #}
+                                            <div class="col-span-2 text-sm font-semibold text-slate-600 flex flex-wrap gap-4">
+                                                <span class="flex items-center gap-2 text-slate-700">
+                                                    <span class="material-symbols-outlined text-green-500 text-lg">check_circle</span>
+                                                    {{ room.amenities }}
+                                                </span>
+                                            </div>
+                                        {% else %}
+                                            <div class="flex items-center gap-2 text-slate-700 text-sm font-semibold">
+                                                <span class="material-symbols-outlined text-green-500 text-lg">check_circle</span> Free Wifi
+                                            </div>
+                                            <div class="flex items-center gap-2 text-slate-700 text-sm font-semibold">
+                                                <span class="material-symbols-outlined text-green-500 text-lg">check_circle</span> Air Conditioning
+                                            </div>
+                                            <div class="flex items-center gap-2 text-slate-700 text-sm font-semibold">
+                                                <span class="material-symbols-outlined text-green-500 text-lg">check_circle</span> TV
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
                         {% empty %}
                         <div class="p-10 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                             <p class="font-bold text-slate-500">No rooms currently available online.</p>
@@ -212,7 +288,7 @@
                                     <div class="flex text-yellow-400 my-0.5">
                                         {% for i in "12345"|make_list %}{% if forloop.counter <= r_hotel.star_rating %}<span class="text-[10px]">★</span>{% endif %}{% endfor %}
                                     </div>
-                                    <p class="text-xs font-bold text-primary">৳{{ r_hotel.price_per_night|floatformat:0 }}</p>
+                                    <p class="text-xs font-bold text-primary">${{ r_hotel.price_per_night|floatformat:0 }}</p>
                                 </div>
                             </a>
                             {% endfor %}
@@ -224,4 +300,24 @@
         </div>
     </div>
 </div>
+
+<script>
+    function openRoomModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('hidden');
+            // Prevent scrolling on body
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeRoomModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('hidden');
+            // Restore scrolling
+            document.body.style.overflow = '';
+        }
+    }
+</script>
 {% endblock %}

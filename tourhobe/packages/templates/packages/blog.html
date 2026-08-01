@@ -1,0 +1,211 @@
+{% extends "packages/base.html" %}
+{% block title %}The Blog | Tour Hobe{% endblock %}
+
+{% block content %}
+
+<main class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+    
+    <!-- Header -->
+    <div class="text-center mb-16">
+        <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight">The Blog</h1>
+    </div>
+
+    <!-- Hero Section: Featured + Top Posts -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-24">
+        
+        <!-- Featured Post (Left) -->
+        <div class="lg:col-span-8">
+            {% if featured_post %}
+            <div class="group relative block overflow-hidden rounded-3xl h-[450px]">
+                {% if featured_post.image %}
+                <img src="{{ featured_post.image.url }}" alt="{{ featured_post.title }}" class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500">
+                {% else %}
+                <div class="absolute inset-0 h-full w-full bg-slate-200"></div>
+                {% endif %}
+                
+                <!-- Category Badge -->
+                {% if featured_post.category %}
+                <div class="absolute top-6 left-6 z-20">
+                    <span class="{{ featured_post.category.color_class }} text-white text-xs font-bold px-3 py-1.5 rounded-md">
+                        {{ featured_post.category.name }}
+                    </span>
+                </div>
+                {% endif %}
+                
+                <!-- Content Overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent flex items-end">
+                    <div class="p-8 w-full">
+                        <div class="flex items-center text-slate-300 text-sm mb-3">
+                            <i class="fa-regular fa-calendar mr-2"></i>
+                            <span>{{ featured_post.date_posted|date:"M d, Y" }}</span>
+                        </div>
+                        <h2 class="text-white text-3xl font-bold mb-3 leading-tight">{{ featured_post.title }}</h2>
+                        <p class="text-slate-300 text-sm line-clamp-2 max-w-2xl mb-4">{{ featured_post.excerpt }}</p>
+                        
+                        <div class="flex items-center justify-between mt-6">
+                            <span class="text-white font-semibold text-sm">By {{ featured_post.author_name }}</span>
+                            <a href="#" class="text-indigo-400 font-semibold text-sm hover:text-indigo-300 transition-colors flex items-center gap-1">Read more <i class="fa-solid fa-arrow-right text-xs"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Placeholder if no featured post -->
+            <div class="bg-slate-100 rounded-3xl h-[450px] flex items-center justify-center">
+                <p class="text-slate-400 font-medium">No featured post yet.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Top Posts (Right) -->
+        <div class="lg:col-span-4 flex flex-col gap-6">
+            {% for post in top_posts %}
+            <div class="flex gap-4 group cursor-pointer">
+                <div class="w-1/3 shrink-0 rounded-2xl overflow-hidden h-28 relative">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    {% else %}
+                    <div class="w-full h-full bg-slate-200"></div>
+                    {% endif %}
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h3 class="font-bold text-slate-900 text-sm leading-tight mb-2 group-hover:text-primary transition-colors line-clamp-2">{{ post.title }}</h3>
+                    <div class="flex items-center text-slate-500 text-xs mb-3">
+                        <i class="fa-regular fa-calendar mr-1"></i>
+                        <span>{{ post.date_posted|date:"M d, Y" }}</span>
+                    </div>
+                    <a href="#" class="text-indigo-600 font-semibold text-xs hover:text-indigo-500 transition-colors flex items-center gap-1 mt-auto">Read more <i class="fa-solid fa-arrow-right text-[10px]"></i></a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="bg-slate-50 rounded-2xl p-6 text-center text-slate-400">No additional posts.</div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- Latest Articles -->
+    <div class="mb-24">
+        <h2 class="text-3xl font-extrabold text-center text-slate-900 mb-12">Latest Article</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for article in latest_articles %}
+            
+                {% if article.is_text_only %}
+                <!-- Text-only Card -->
+                <div class="bg-slate-50 rounded-[2rem] p-8 flex flex-col group cursor-pointer border border-slate-100 hover:shadow-lg transition-shadow">
+                    {% if article.category %}
+                    <span class="{{ article.category.color_class }} text-white text-[10px] font-bold px-2.5 py-1 rounded w-fit mb-4 uppercase tracking-wide">
+                        {{ article.category.name }}
+                    </span>
+                    {% endif %}
+                    <h3 class="font-bold text-slate-900 text-xl leading-snug mb-4 group-hover:text-primary transition-colors">{{ article.title }}</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">{{ article.excerpt }}</p>
+                    <span class="text-slate-600 font-medium text-sm mt-auto">By {{ article.author_name }}</span>
+                </div>
+                
+                {% else %}
+                <!-- Standard/Video Card -->
+                <div class="group cursor-pointer">
+                    <div class="relative rounded-[2rem] overflow-hidden h-64 mb-5 shadow-md">
+                        {% if article.image %}
+                        <img src="{{ article.image.url }}" alt="{{ article.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        {% else %}
+                        <div class="w-full h-full bg-slate-200"></div>
+                        {% endif %}
+                        
+                        <!-- Category Badge -->
+                        {% if article.category %}
+                        <div class="absolute top-4 left-4 z-10">
+                            <span class="{{ article.category.color_class }} text-white text-[10px] font-bold px-2.5 py-1 rounded uppercase tracking-wide shadow-sm">
+                                {{ article.category.name }}
+                            </span>
+                        </div>
+                        {% endif %}
+
+                        <!-- Video Overlay -->
+                        {% if article.video_url %}
+                        <div class="absolute inset-0 bg-black/20 flex flex-col justify-end p-4 z-20">
+                            <div class="w-full bg-black/70 backdrop-blur-md rounded-xl p-2 flex items-center justify-between text-white/90">
+                                <div class="flex items-center gap-3">
+                                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-white text-black hover:bg-slate-200 transition-colors">
+                                        <i class="fa-solid fa-play text-xs ml-0.5"></i>
+                                    </button>
+                                    <span class="text-xs font-semibold">1:18</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-volume-high text-xs"></i>
+                                    <i class="fa-solid fa-expand text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="font-bold text-slate-900 text-lg leading-snug mb-3 group-hover:text-primary transition-colors">{{ article.title }}</h3>
+                    <span class="text-slate-500 font-medium text-sm">By {{ article.author_name }}</span>
+                </div>
+                {% endif %}
+
+            {% empty %}
+            <div class="col-span-full text-center text-slate-500 py-12">No latest articles available.</div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-12 text-center">
+            <button class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 font-bold py-3 px-8 rounded-xl text-sm transition-colors flex items-center gap-2 mx-auto">
+                Load more <i class="fa-solid fa-arrow-rotate-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="bg-[#FFF9EA] rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden text-center max-w-5xl mx-auto border border-yellow-100 shadow-sm">
+        
+        <!-- Decor Left -->
+        <div class="absolute top-1/2 -translate-y-1/2 left-12 hidden md:block opacity-30">
+            <div class="grid grid-cols-4 gap-2">
+                {% for i in "1234567890123456" %}
+                <div class="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Decor Right -->
+        <div class="absolute top-12 right-12 hidden md:block opacity-40 text-yellow-500">
+            <svg width="60" height="20" viewBox="0 0 60 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 10C5 10 5 0 10 0C15 0 15 10 20 10C25 10 25 0 30 0C35 0 35 10 40 10C45 10 45 0 50 0C55 0 55 10 60 10" stroke="currentColor" stroke-width="2"/>
+                <path d="M0 20C5 20 5 10 10 10C15 10 15 20 20 20C25 20 25 10 30 10C35 10 35 20 40 20C45 20 45 10 50 10C55 10 55 20 60 20" stroke="currentColor" stroke-width="2"/>
+            </svg>
+        </div>
+
+        <p class="text-indigo-600 font-bold text-xs uppercase tracking-widest mb-4">Newsletter</p>
+        <h2 class="text-4xl font-extrabold text-slate-900 mb-6">Subscribe Mail list!</h2>
+        <p class="text-slate-600 text-sm max-w-xl mx-auto mb-10 leading-relaxed">
+            Speedily say has suitable disposal add boy. On forth doubt miles of child. Exercise joy man children rejoiced.
+        </p>
+
+        <form method="POST" action="{% url 'blog_page' %}" class="max-w-md mx-auto bg-white p-2 rounded-2xl shadow-sm border border-slate-100 flex items-center relative z-10">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Enter your email" required class="flex-grow bg-transparent border-none outline-none px-4 text-sm text-slate-700">
+            <button type="submit" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-6 rounded-xl text-sm transition-colors shadow-lg shadow-indigo-500/30">
+                Subscribe!
+            </button>
+        </form>
+        
+        <!-- Alerts -->
+        {% if messages %}
+        <div class="mt-4 max-w-md mx-auto relative z-10">
+            {% for message in messages %}
+            <div class="text-sm font-semibold p-3 rounded-xl {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+
+</main>
+
+{% endblock %}

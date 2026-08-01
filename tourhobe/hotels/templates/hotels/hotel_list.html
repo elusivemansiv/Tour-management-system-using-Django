@@ -125,7 +125,7 @@
                         <div class="pt-6 border-t border-slate-50 flex items-center justify-between">
                             <div>
                                 <span class="block text-[10px] font-bold text-slate-400 uppercase mb-0.5">Price / Night</span>
-                                <span class="text-xl font-extrabold text-slate-900 tracking-tight">৳ {{ hotel.price_per_night|floatformat:0 }}</span>
+                                <span class="text-xl font-extrabold text-slate-900 tracking-tight">$ {{ hotel.price_per_night|floatformat:0 }}</span>
                             </div>
                             <a href="{% url 'hotel_detail' hotel.id %}" class="px-6 py-3 bg-primary/10 text-primary font-bold text-sm rounded-xl hover:bg-primary hover:text-white transition-all">
                                 View Details

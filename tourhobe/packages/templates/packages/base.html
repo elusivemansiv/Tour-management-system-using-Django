@@ -5,10 +5,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    {% if site_settings and site_settings.favicon %}
+    <link rel="icon" type="image/x-icon" href="{{ site_settings.favicon.url }}">
+    {% endif %}
     <title>{% block title %}Tour Hobe{% endblock %}</title>
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!-- Tailwind Config -->
     <script>
@@ -17,7 +23,7 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: "#006ce4",
+                        primary: "#5E3BEE",
                         secondary: "#ffb700",
                         "background-light": "#f8fafc",
                         "background-dark": "#0f172a",
@@ -48,45 +54,242 @@
 
 <body class="bg-background-light text-slate-900 min-h-screen flex flex-col">
 
-
-
     <!-- NAVBAR -->
-    <nav class="sticky top-0 z-50 bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    <nav class="sticky top-0 z-50 bg-white shadow-sm relative">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden flex items-center text-slate-700 hover:text-primary transition-colors focus:outline-none">
+                <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
 
             <!-- Logo -->
-            <div class="flex items-center gap-2">
-                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-elegant">
-                    <span class="material-symbols-outlined text-white text-lg">flight_takeoff</span>
-                </div>
-                <span class="text-2xl font-bold tracking-tight text-primary"><a href="/">Tour Hobe</a></span>
+            <div class="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
+                <a href="/" class="flex items-center gap-2">
+                    {% if site_settings and site_settings.logo %}
+                        <img src="{{ site_settings.logo.url }}" alt="Tour Hobe Logo" class="h-8 md:h-10 w-auto object-contain">
+                    {% else %}
+                        <div class="w-8 h-8 md:w-10 md:h-10 bg-primary rounded-lg flex items-center justify-center shadow-elegant">
+                            <span class="material-symbols-outlined text-white text-base md:text-lg">flight_takeoff</span>
+                        </div>
+                    {% endif %}
+                    <span class="text-xl md:text-2xl font-bold tracking-tight text-black">
+                        {% if site_settings and site_settings.site_name %}
+                            {{ site_settings.site_name }}
+                        {% else %}
+                            Tour Hobe
+                        {% endif %}
+                    </span>
+                </a>
             </div>
 
-            <!-- Links -->
-            <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-700">
-                <a href="/" class="hover:text-primary transition-colors">Home</a>
-                <a href="{% url 'explore' %}" class="hover:text-primary transition-colors">Destinations</a>
-                <a href="{% url 'flight_list' %}" class="hover:text-primary transition-colors">Flights</a>
-                <a href="{% url 'hotel_list' %}" class="hover:text-primary transition-colors">Hotels</a>
-                <a href="{% url 'all_packages' %}" class="hover:text-primary transition-colors">Packages</a>
-                <a href="{% url 'contact' %}" class="hover:text-primary transition-colors">Contact</a>
+            <div class="hidden md:flex items-center gap-8 text-[13px] uppercase tracking-widest text-slate-500 font-bold">
+                <a href="/" class="relative hover:text-slate-900 transition-colors py-1.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Home</a>
+                
+                <!-- Listings Mega Menu -->
+                <div class="relative group">
+                    <button class="relative flex items-center gap-1.5 hover:text-slate-900 transition-colors py-1.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full">
+                        Listings
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 group-hover:text-primary transition-transform duration-300 group-hover:-rotate-180"></i>
+                    </button>
+
+                    <!-- Mega Menu Panel -->
+                    <div class="absolute top-full -left-32 w-[620px] pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50">
+                        <div class="bg-white rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] border border-slate-100/80 overflow-hidden">
+
+                            <!-- Top gradient accent bar -->
+                            <div class="h-1 bg-gradient-to-r from-primary via-violet-400 to-fuchsia-400"></div>
+
+                            <!-- Header -->
+                            <div class="px-7 pt-5 pb-3 flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-900">Our Services</h3>
+                                    <p class="text-xs text-slate-400 mt-0.5">Everything you need for your next adventure</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                    <i class="fa-solid fa-compass text-primary text-sm"></i>
+                                </div>
+                            </div>
+
+                            <!-- Divider -->
+                            <div class="mx-7 border-t border-slate-100"></div>
+
+                            <!-- Service Cards Grid -->
+                            <div class="p-5 grid grid-cols-2 gap-3">
+
+                                <!-- Hotel Card -->
+                                <a href="{% url 'hotel_list' %}" class="group/card flex items-start gap-4 p-4 rounded-xl hover:bg-gradient-to-br hover:from-indigo-50 hover:to-violet-50/50 transition-all duration-300 border border-transparent hover:border-indigo-100/60">
+                                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0 group-hover/card:scale-110 transition-transform duration-300">
+                                        <i class="fa-solid fa-hotel text-white text-sm"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-sm font-bold text-slate-800 group-hover/card:text-indigo-700 transition-colors">Hotels</h4>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Find premium stays at the best prices</p>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-slate-300 group-hover/card:text-indigo-500 group-hover/card:translate-x-1 transition-all mt-1 ml-auto shrink-0"></i>
+                                </a>
+
+                                <!-- Flight Card -->
+                                <a href="{% url 'flight_list' %}" class="group/card flex items-start gap-4 p-4 rounded-xl hover:bg-gradient-to-br hover:from-sky-50 hover:to-cyan-50/50 transition-all duration-300 border border-transparent hover:border-sky-100/60">
+                                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-sky-500/20 shrink-0 group-hover/card:scale-110 transition-transform duration-300">
+                                        <i class="fa-solid fa-plane text-white text-sm"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-sm font-bold text-slate-800 group-hover/card:text-sky-700 transition-colors">Flights</h4>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Book domestic & international flights</p>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-slate-300 group-hover/card:text-sky-500 group-hover/card:translate-x-1 transition-all mt-1 ml-auto shrink-0"></i>
+                                </a>
+
+                                <!-- Packages Card -->
+                                <a href="{% url 'all_packages' %}" class="group/card flex items-start gap-4 p-4 rounded-xl hover:bg-gradient-to-br hover:from-emerald-50 hover:to-teal-50/50 transition-all duration-300 border border-transparent hover:border-emerald-100/60">
+                                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0 group-hover/card:scale-110 transition-transform duration-300">
+                                        <i class="fa-solid fa-suitcase-rolling text-white text-sm"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-sm font-bold text-slate-800 group-hover/card:text-emerald-700 transition-colors">Packages</h4>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">All-inclusive tour bundles for you</p>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-slate-300 group-hover/card:text-emerald-500 group-hover/card:translate-x-1 transition-all mt-1 ml-auto shrink-0"></i>
+                                </a>
+
+                                <!-- Cab Card -->
+                                <a href="{% url 'cab_list' %}" class="group/card flex items-start gap-4 p-4 rounded-xl hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50/50 transition-all duration-300 border border-transparent hover:border-amber-100/60">
+                                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0 group-hover/card:scale-110 transition-transform duration-300">
+                                        <i class="fa-solid fa-car text-white text-sm"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-sm font-bold text-slate-800 group-hover/card:text-amber-700 transition-colors">Cabs</h4>
+                                        <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Comfortable rides, anywhere anytime</p>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-slate-300 group-hover/card:text-amber-500 group-hover/card:translate-x-1 transition-all mt-1 ml-auto shrink-0"></i>
+                                </a>
+
+                            </div>
+
+                            <!-- Bottom CTA Banner -->
+                            <div class="mx-5 mb-5 p-4 bg-gradient-to-r from-primary/5 via-violet-50 to-fuchsia-50 rounded-xl border border-primary/10 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                                        <i class="fa-solid fa-sparkles text-primary text-xs"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-700">Explore Destinations</p>
+                                        <p class="text-[11px] text-slate-400">Discover trending places to visit</p>
+                                    </div>
+                                </div>
+                                <a href="{% url 'explore' %}" class="px-3.5 py-1.5 bg-primary text-white text-[11px] font-bold rounded-lg hover:bg-primary/90 transition-colors shadow-sm shadow-primary/20">
+                                    Explore <i class="fa-solid fa-arrow-right text-[9px] ml-1"></i>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{% url 'blog_page' %}" class="relative hover:text-slate-900 transition-colors py-1.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Blog</a>
+                <a href="{% url 'about' %}" class="relative hover:text-slate-900 transition-colors py-1.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full">About</a>
+                <a href="{% url 'contact' %}" class="relative hover:text-slate-900 transition-colors py-1.5 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Contact</a>
             </div>
 
             <!-- Auth/Profile -->
-            <div class="flex items-center gap-4">
+            <div class="hidden md:flex items-center gap-4">
                 {% if user.is_authenticated %}
-                <div class="flex items-center gap-3 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
-                    <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
-                        {{ user.username.0|upper }}
-                    </span>
-                    <span class="text-sm font-semibold text-slate-700 hidden sm:block">{{ user.username }}</span>
+                <div class="relative" id="profile-dropdown-container">
+                    <div class="flex items-center gap-4">
+                        <!-- Notification Bell & Dropdown -->
+                        <div class="relative">
+                            <button id="notification-btn" class="relative w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors focus:outline-none">
+                                <i class="fa-regular fa-bell text-lg"></i>
+                                <span class="absolute top-2 right-2 w-2 h-2 bg-red-400 rounded-full border-2 border-white"></span>
+                            </button>
+                            
+                            <!-- Notifications Dropdown -->
+                            <div id="notification-dropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-slate-100 overflow-hidden z-50">
+                                <div class="p-4 border-b border-slate-100 flex justify-between items-center">
+                                    <h4 class="font-bold text-slate-900 text-sm">Notifications</h4>
+                                    <a href="#" class="text-xs text-primary hover:underline">Mark all as read</a>
+                                </div>
+                                <div class="max-h-80 overflow-y-auto">
+                                    <!-- Notification Item 1 -->
+                                    <a href="#" class="flex gap-4 p-4 hover:bg-slate-50 transition-colors border-b border-slate-50">
+                                        <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 mb-0.5">Booking Confirmed!</p>
+                                            <p class="text-xs text-slate-500 line-clamp-2">Your trip to Maldives has been successfully booked. Check your email for details.</p>
+                                            <span class="text-[10px] font-bold text-slate-400 mt-2 block">2 hours ago</span>
+                                        </div>
+                                    </a>
+                                    <!-- Notification Item 2 -->
+                                    <a href="#" class="flex gap-4 p-4 hover:bg-slate-50 transition-colors">
+                                        <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center shrink-0">
+                                            <i class="fa-solid fa-fire"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-900 mb-0.5">Flash Sale</p>
+                                            <p class="text-xs text-slate-500 line-clamp-2">Save up to 30% on premium hotels in Dubai. Book before midnight!</p>
+                                            <span class="text-[10px] font-bold text-slate-400 mt-2 block">5 hours ago</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="p-3 text-center border-t border-slate-100">
+                                    <a href="#" class="text-xs font-bold text-slate-600 hover:text-primary transition-colors">View All</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Avatar Button -->
+                        <button id="profile-btn" class="w-10 h-10 rounded-xl overflow-hidden border-2 border-transparent hover:border-primary transition-all focus:outline-none focus:border-primary">
+                            {% if request.user.profile.profile_picture %}
+                                <img src="{{ request.user.profile.profile_picture.url }}" alt="User Avatar" class="w-full h-full object-cover">
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=E0E7FF&color=4F46E5" alt="User Avatar" class="w-full h-full object-cover">
+                            {% endif %}
+                        </button>
+                    </div>
+
+                    <!-- Dropdown Menu -->
+                    <div id="profile-dropdown" class="hidden absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] border border-slate-100 overflow-hidden z-50">
+                        <!-- Header -->
+                        <div class="p-5 flex items-center gap-4 border-b border-slate-100">
+                            {% if request.user.profile.profile_picture %}
+                                <img src="{{ request.user.profile.profile_picture.url }}" alt="User Avatar" class="w-12 h-12 rounded-xl object-cover">
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=E0E7FF&color=4F46E5" alt="User Avatar" class="w-12 h-12 rounded-xl object-cover">
+                            {% endif %}
+                            <div class="overflow-hidden">
+                                <h4 class="font-bold text-slate-900 text-base leading-tight truncate">{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username }}{% endif %}</h4>
+                                <p class="text-xs text-slate-500 mt-0.5 truncate">{{ user.email|default:"user@example.com" }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Links -->
+                        <div class="py-2">
+                            <a href="{% url 'user_dashboard' %}" class="flex items-center gap-3 px-5 py-2.5 text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors">
+                                <i class="fa-regular fa-bookmark w-5 text-center text-lg"></i>
+                                <span class="font-medium text-sm">My Bookings</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-5 py-2.5 text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors">
+                                <i class="fa-regular fa-heart w-5 text-center text-lg"></i>
+                                <span class="font-medium text-sm">My Wishlist</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-5 py-2.5 text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors">
+                                <i class="fa-solid fa-gear w-5 text-center text-lg"></i>
+                                <span class="font-medium text-sm">Settings</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-5 py-2.5 text-slate-600 hover:text-primary hover:bg-slate-50 transition-colors">
+                                <i class="fa-solid fa-circle-info w-5 text-center text-lg"></i>
+                                <span class="font-medium text-sm">Help Center</span>
+                            </a>
+                            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-5 py-2.5 text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors">
+                                <i class="fa-solid fa-power-off w-5 text-center text-lg"></i>
+                                <span class="font-medium text-sm">Sign Out</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <a href="{% url 'user_dashboard' %}" class="text-slate-500 hover:text-primary transition-colors" title="Dashboard">
-                    <i class="fa-solid fa-layer-group text-lg"></i>
-                </a>
-                <a href="{% url 'logout' %}" class="px-5 py-2.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg text-sm font-bold transition-colors">
-                    Log out
-                </a>
                 {% else %}
                 <a href="{% url 'login' %}" class="px-5 py-2.5 text-primary bg-primary/10 hover:bg-primary/20 rounded-lg text-sm font-bold transition-colors">Login</a>
                 <a href="{% url 'register' %}" class="px-5 py-2.5 bg-primary text-white hover:bg-primary/90 rounded-lg text-sm font-bold transition-colors shadow-lg shadow-primary/30">
@@ -95,7 +298,43 @@
                 {% endif %}
             </div>
 
+            <!-- Mobile Right Placeholder -->
+            <div class="w-8 md:hidden"></div>
+
         </div>
+
+        <!-- Mobile Menu Container -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100 absolute top-full left-0 w-full shadow-lg">
+            <div class="px-4 py-4 space-y-4">
+                <a href="/" class="block text-sm font-semibold text-slate-700 hover:text-primary">Home</a>
+                
+                <!-- Mobile Services -->
+                <div class="py-2">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">Services</p>
+                    <div class="pl-4 space-y-3 border-l-2 border-slate-100">
+                        <a href="{% url 'explore' %}" class="block text-sm font-semibold text-slate-700 hover:text-primary">Destinations</a>
+                        <a href="{% url 'flight_list' %}" class="block text-sm font-semibold text-slate-700 hover:text-primary">Flights</a>
+                        <a href="{% url 'hotel_list' %}" class="block text-sm font-semibold text-slate-700 hover:text-primary">Hotels</a>
+                        <a href="{% url 'all_packages' %}" class="block text-sm font-semibold text-slate-700 hover:text-primary">Packages</a>
+                    </div>
+                </div>
+
+                <a href="{% url 'blog_page' %}" class="block text-sm font-semibold text-slate-700 hover:text-primary">Blog</a>
+                <a href="{% url 'about' %}" class="block text-sm font-semibold text-slate-700 hover:text-primary">About</a>
+                <a href="{% url 'contact' %}" class="block text-sm font-semibold text-slate-700 hover:text-primary">Contact</a>
+                
+                <div class="pt-4 border-t border-slate-100 flex flex-col items-start gap-3">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'user_dashboard' %}" class="block text-sm font-semibold text-slate-700 hover:text-primary">Dashboard</a>
+                    <a href="{% url 'logout' %}" class="block text-sm font-semibold text-red-600 hover:text-red-700">Log out</a>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="px-8 py-2.5 text-primary bg-primary/10 rounded-lg text-sm font-bold">Login</a>
+                    <a href="{% url 'register' %}" class="px-8 py-2.5 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/30">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
     </nav>
 
     <!-- MESSAGES -->
@@ -116,15 +355,25 @@
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-200 pt-16 pb-8 mt-12">
+    <footer class="bg-white border-t border-slate-200 pt-16 pb-8">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center gap-2 mb-6">
-                        <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                            <span class="material-symbols-outlined text-white text-sm">flight_takeoff</span>
-                        </div>
-                        <span class="text-xl font-bold text-slate-900">Tour Hobe</span>
+                        {% if site_settings and site_settings.logo %}
+                            <img src="{{ site_settings.logo.url }}" alt="Tour Hobe Logo" class="h-8 w-auto object-contain">
+                        {% else %}
+                            <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white text-sm">flight_takeoff</span>
+                            </div>
+                        {% endif %}
+                        <span class="text-xl font-bold text-slate-900">
+                            {% if site_settings and site_settings.site_name %}
+                                {{ site_settings.site_name }}
+                            {% else %}
+                                Tour Hobe
+                            {% endif %}
+                        </span>
                     </div>
                     <p class="text-slate-500 text-sm leading-relaxed mb-6">
                         Making world travel simple, affordable, and accessible for everyone. Book flights, hotels, and holiday packages all in one platform.
@@ -149,7 +398,21 @@
 
             </div>
             <div class="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-slate-500">© 2026 TourHobe. All rights reserved.</p>
+                <div class="text-center md:text-left">
+                    <p class="text-xs text-slate-500">© 2026 TourHobe. All rights reserved.</p>
+                    {% if site_settings and site_settings.show_developer_credits %}
+                    <p class="text-xs text-slate-400 mt-2">
+                        {{ site_settings.developer_credit_text|default:"developed by" }}
+                        {% if site_settings.show_developer1 %}
+                        <a href="{{ site_settings.developer1_url|default:'https://stradigtech.com/' }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors font-bold no-underline">{{ site_settings.developer1_name|default:"Stradigtech" }}</a>
+                        {% endif %}
+                        {% if site_settings.show_developer1 and site_settings.show_developer2 %} | {% endif %}
+                        {% if site_settings.show_developer2 %}
+                        <a href="{{ site_settings.developer2_url|default:'https://mansibahsan.netlify.app/' }}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors font-bold no-underline">{{ site_settings.developer2_name|default:"Mansib" }}</a>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                </div>
                 <div class="flex gap-6">
                     <a class="text-xs text-slate-500 hover:text-primary transition-colors" href="#">Privacy Policy</a>
                     <a class="text-xs text-slate-500 hover:text-primary transition-colors" href="#">Terms of Service</a>
@@ -157,6 +420,55 @@
             </div>
         </div>
     </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Profile Dropdown Toggle
+            const profileBtn = document.getElementById('profile-btn');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            const notifBtn = document.getElementById('notification-btn');
+            const notifDropdown = document.getElementById('notification-dropdown');
+            
+            if (profileBtn && profileDropdown) {
+                profileBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    profileDropdown.classList.toggle('hidden');
+                    if (notifDropdown && !notifDropdown.classList.contains('hidden')) {
+                        notifDropdown.classList.add('hidden');
+                    }
+                });
+            }
+            
+            if (notifBtn && notifDropdown) {
+                notifBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    notifDropdown.classList.toggle('hidden');
+                    if (profileDropdown && !profileDropdown.classList.contains('hidden')) {
+                        profileDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (profileDropdown && !profileDropdown.contains(e.target)) {
+                    profileDropdown.classList.add('hidden');
+                }
+                if (notifDropdown && !notifDropdown.contains(e.target)) {
+                    notifDropdown.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 
 </body>
 

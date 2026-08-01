@@ -26,6 +26,19 @@ class Room(models.Model):
     capacity_children = models.IntegerField(default=0)
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     total_rooms = models.IntegerField(default=1)
+    description = models.TextField(blank=True, null=True, help_text="Detailed description of the room")
+    amenities = models.TextField(blank=True, null=True, help_text="Comma separated amenities, e.g. Swimming pool, TV, AC")
+    image = models.ImageField(upload_to='rooms/', blank=True, null=True)
 
     def __str__(self):
         return f"{self.room_type} - {self.hotel.name}"
+
+class Review(models.Model):
+    hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='reviews')
+    user_name = models.CharField(max_length=150)
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)], default=5)
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.rating} stars by {self.user_name} for {self.hotel.name}"

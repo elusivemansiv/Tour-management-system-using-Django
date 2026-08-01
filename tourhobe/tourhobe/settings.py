@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-snbmtqsl$4l$n@j=cph+lmfht0he9xwzhu3lcoizwguf)oi2c@')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 't')
+DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 't')
 
 ALLOWED_HOSTS = ['tourhobe.stradigtech.com', 'localhost', '127.0.0.1'] 
 CSRF_TRUSTED_ORIGINS = ['https://tourhobe.stradigtech.com', 'http://localhost:8000', 'http://127.0.0.1:8000']
@@ -37,8 +37,9 @@ CSRF_TRUSTED_ORIGINS = ['https://tourhobe.stradigtech.com', 'http://localhost:80
 # Application definition
 
 INSTALLED_APPS = [
-    'jet',
-    'jet.dashboard',
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +51,13 @@ INSTALLED_APPS = [
     'bookings',
     'flights',
     'hotels',
+    'about',
+    'blog',
+    'cabs',
+    'carousel',
+    'site_settings',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -68,13 +76,14 @@ ROOT_URLCONF = 'tourhobe.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'site_settings.context_processors.site_settings',
             ],
         },
     },
@@ -133,7 +142,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# CKEditor Settings
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Format', 'Font', 'FontSize'],
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Image', 'Table', 'HorizontalRule', 'SpecialChar', 'Iframe'],
+            ['TextColor', 'BGColor'],
+            ['Maximize', 'ShowBlocks', 'Source']
+        ],
+        'extraPlugins': ','.join(['uploadimage']),
+    }
+}
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Use basic static file storage to avoid 500 errors on missing files (common in Django Admin)

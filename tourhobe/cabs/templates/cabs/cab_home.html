@@ -1,0 +1,241 @@
+{% extends 'packages/base.html' %}
+{% load static %}
+
+{% block title %}Book Cabs - Tour Hobe{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<div class="relative bg-slate-900 text-white min-h-[500px] flex items-center justify-center pt-20 pb-32">
+    <!-- Background Image placeholder (using CSS gradient for now) -->
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 opacity-80 z-0"></div>
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-4 md:px-6">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-6 text-center text-white">Book Your Online Cab</h1>
+        
+        <!-- Search Widget -->
+        <div class="bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto text-slate-800">
+            <form action="{% url 'cab_list' %}" method="GET">
+                <div class="flex items-center gap-6 mb-6">
+                    <label class="flex items-center gap-2 cursor-pointer font-bold text-sm text-slate-700">
+                        <input type="radio" name="trip_type" value="oneway" checked class="text-primary focus:ring-primary h-4 w-4">
+                        One Way
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer font-bold text-sm text-slate-700">
+                        <input type="radio" name="trip_type" value="round" class="text-primary focus:ring-primary h-4 w-4">
+                        Round Trip
+                    </label>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="relative">
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pickup</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <span class="material-symbols-outlined text-[18px]">location_on</span>
+                            </span>
+                            <input type="text" name="pickup" placeholder="Select location" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-bold">
+                        </div>
+                    </div>
+                    
+                    <div class="hidden lg:flex items-center justify-center absolute left-1/2 -translate-x-1/2 top-[55%] z-10">
+                        <div class="w-8 h-8 bg-slate-800 text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:bg-primary transition-colors">
+                            <span class="material-symbols-outlined text-[16px]">sync_alt</span>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Drop</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <span class="material-symbols-outlined text-[18px]">location_on</span>
+                            </span>
+                            <input type="text" name="drop" placeholder="Select location" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-bold">
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pickup Date</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                            </span>
+                            <input type="date" name="date" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-bold text-slate-600">
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Pickup Time</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                <span class="material-symbols-outlined text-[18px]">schedule</span>
+                            </span>
+                            <input type="time" name="time" class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-sm font-bold text-slate-600">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-center">
+                    <button type="submit" class="bg-slate-900 hover:bg-primary text-white font-bold py-3 px-12 rounded-xl transition-all shadow-lg shadow-black/20 w-full md:w-auto">
+                        Search Cabs
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- OUR AWESOME VEHICLES -->
+<section class="py-20 bg-slate-50 relative -mt-16 z-20">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <h2 class="text-3xl font-extrabold text-center text-slate-900 mb-12">Our Awesome Vehicles</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            {% for vt in vehicle_types %}
+            <div class="bg-white rounded-2xl p-6 flex flex-col items-center justify-center shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] hover:-translate-y-2 transition-transform cursor-pointer border border-slate-100">
+                <div class="w-20 h-12 mb-4 bg-slate-100 rounded flex items-center justify-center">
+                    {% if vt.image %}
+                    <img src="{{ vt.image.url }}" alt="{{ vt.name }}" class="max-h-full object-contain">
+                    {% else %}
+                    <span class="material-symbols-outlined text-3xl text-slate-400">directions_car</span>
+                    {% endif %}
+                </div>
+                <h3 class="font-bold text-slate-900">{{ vt.name }}</h3>
+                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider mt-1">({{ vt.seats }} Seats)</p>
+            </div>
+            {% empty %}
+            <!-- Placeholders -->
+            <div class="bg-white rounded-2xl p-6 flex flex-col items-center justify-center shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] border border-slate-100"><span class="material-symbols-outlined text-3xl text-indigo-500 mb-2">directions_car</span><h3 class="font-bold">Sedan</h3><p class="text-[10px] text-slate-400 uppercase">(4 Seats)</p></div>
+            <div class="bg-white rounded-2xl p-6 flex flex-col items-center justify-center shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] border border-slate-100"><span class="material-symbols-outlined text-3xl text-indigo-500 mb-2">airport_shuttle</span><h3 class="font-bold">Micro</h3><p class="text-[10px] text-slate-400 uppercase">(6 Seats)</p></div>
+            <div class="bg-white rounded-2xl p-6 flex flex-col items-center justify-center shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)] border border-slate-100"><span class="material-symbols-outlined text-3xl text-indigo-500 mb-2">time_to_leave</span><h3 class="font-bold">SUV</h3><p class="text-[10px] text-slate-400 uppercase">(7 Seats)</p></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <h2 class="text-3xl font-extrabold text-center text-slate-900 mb-12">Why Choose Us</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for feature in features %}
+            <div class="bg-slate-50 rounded-3xl p-8 hover:shadow-xl transition-shadow border border-slate-100">
+                <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined">{{ feature.icon_class|default:'verified' }}</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">{{ feature.title }}</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">{{ feature.description }}</p>
+            </div>
+            {% empty %}
+            <!-- Placeholders -->
+            <div class="bg-slate-50 rounded-3xl p-8 hover:shadow-xl transition-shadow border border-slate-100">
+                <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-6"><span class="material-symbols-outlined">bolt</span></div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Advance Booking</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">Happiness prosperous. Immaculate had conviction for every delay in they Extremity now.</p>
+            </div>
+            <div class="bg-slate-50 rounded-3xl p-8 hover:shadow-xl transition-shadow border border-slate-100">
+                <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-6"><span class="material-symbols-outlined">payments</span></div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Economical Trip</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">Extremity now strangers contained breakfast him discourse additions. Sincerity.</p>
+            </div>
+            <div class="bg-slate-50 rounded-3xl p-8 hover:shadow-xl transition-shadow border border-slate-100">
+                <div class="w-12 h-12 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mb-6"><span class="material-symbols-outlined">security</span></div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Secure and Safer</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">Perpetual extremity now strangers contained breakfast him discourse additions.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- APP BANNER -->
+<section class="py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="bg-slate-100 rounded-[40px] p-10 md:p-20 relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+            <!-- Decorative circle -->
+            <div class="absolute top-10 right-20 w-32 h-32 bg-yellow-400 rounded-full opacity-80 mix-blend-multiply blur-sm"></div>
+            <div class="absolute -bottom-10 right-10 w-64 h-64 bg-teal-500 rounded-full opacity-90 mix-blend-multiply blur-sm"></div>
+            
+            <div class="relative z-10 max-w-lg mb-10 md:mb-0">
+                <h2 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">Download our app and access exclusive features</h2>
+                <ul class="flex flex-wrap gap-4 mb-8">
+                    <li class="flex items-center gap-2 text-sm font-bold text-slate-700"><span class="w-2 h-2 rounded-full bg-green-500"></span> 24/7 Customer Support</li>
+                    <li class="flex items-center gap-2 text-sm font-bold text-slate-700"><span class="w-2 h-2 rounded-full bg-green-500"></span> Ride Safety</li>
+                    <li class="flex items-center gap-2 text-sm font-bold text-slate-700"><span class="w-2 h-2 rounded-full bg-green-500"></span> Top Rated Driver - Partner</li>
+                </ul>
+                <div class="flex gap-4">
+                    <button class="bg-black text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-slate-800 transition-colors">
+                        <i class="fa-brands fa-google-play text-xl"></i>
+                        <div class="text-left">
+                            <div class="text-[10px] uppercase">Get it on</div>
+                            <div class="font-bold text-sm leading-none">Google Play</div>
+                        </div>
+                    </button>
+                    <button class="bg-black text-white px-6 py-3 rounded-xl flex items-center gap-2 hover:bg-slate-800 transition-colors">
+                        <i class="fa-brands fa-apple text-xl"></i>
+                        <div class="text-left">
+                            <div class="text-[10px] uppercase">Download on the</div>
+                            <div class="font-bold text-sm leading-none">App Store</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="relative z-10 w-full max-w-sm flex justify-center">
+                <div class="w-[250px] h-[500px] bg-white rounded-[40px] shadow-2xl border-[8px] border-slate-900 overflow-hidden relative">
+                    <!-- Mock App UI -->
+                    <div class="w-full h-full bg-slate-50 p-4">
+                        <div class="w-1/2 h-4 bg-slate-200 rounded-full mb-4"></div>
+                        <div class="w-full h-32 bg-blue-100 rounded-2xl mb-4"></div>
+                        <div class="w-3/4 h-4 bg-slate-200 rounded-full mb-2"></div>
+                        <div class="w-1/2 h-4 bg-slate-200 rounded-full mb-6"></div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="w-full h-24 bg-slate-200 rounded-xl"></div>
+                            <div class="w-full h-24 bg-slate-200 rounded-xl"></div>
+                            <div class="w-full h-24 bg-slate-200 rounded-xl"></div>
+                            <div class="w-full h-24 bg-slate-200 rounded-xl"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-20 bg-white">
+    <div class="max-w-3xl mx-auto px-4 md:px-6">
+        <h2 class="text-3xl font-extrabold text-center text-slate-900 mb-12">Frequently Asked Questions</h2>
+        
+        <div class="space-y-4">
+            {% for faq in faqs %}
+            <details class="group bg-slate-50 border border-slate-100 rounded-2xl [&_summary::-webkit-details-marker]:hidden">
+                <summary class="flex items-center justify-between p-6 cursor-pointer font-bold text-slate-800 hover:text-primary transition-colors">
+                    {{ faq.question }}
+                    <span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 text-slate-400">expand_more</span>
+                </summary>
+                <div class="px-6 pb-6 pt-0 text-slate-500 text-sm leading-relaxed">
+                    {{ faq.answer }}
+                </div>
+            </details>
+            {% empty %}
+            <!-- Placeholders -->
+            <details class="group bg-slate-50 border border-slate-100 rounded-2xl [&_summary::-webkit-details-marker]:hidden" open>
+                <summary class="flex items-center justify-between p-6 cursor-pointer font-bold text-slate-800 hover:text-primary transition-colors">
+                    How does it work?
+                    <span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 text-slate-400">expand_more</span>
+                </summary>
+                <div class="px-6 pb-6 pt-0 text-slate-500 text-sm leading-relaxed">
+                    Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not previous. Acuteness abilities ask can offending furnished fulfilled sex.
+                </div>
+            </details>
+            <details class="group bg-slate-50 border border-slate-100 rounded-2xl [&_summary::-webkit-details-marker]:hidden">
+                <summary class="flex items-center justify-between p-6 cursor-pointer font-bold text-slate-800 hover:text-primary transition-colors">
+                    What are monthly tracked users?
+                    <span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 text-slate-400">expand_more</span>
+                </summary>
+                <div class="px-6 pb-6 pt-0 text-slate-500 text-sm leading-relaxed">Lorem ipsum dolor sit amet...</div>
+            </details>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

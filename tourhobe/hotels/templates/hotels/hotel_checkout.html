@@ -1,0 +1,116 @@
+{% extends "packages/base.html" %}
+{% block title %}Checkout | Tour Hobe{% endblock %}
+
+{% block content %}
+
+<form method="post">
+{% csrf_token %}
+
+<div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- LEFT: CUSTOMER INFO -->
+    <div class="lg:col-span-2 space-y-8">
+
+        <!-- Traveler Info -->
+        <section class="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="material-icons-outlined text-green-600">person</span>
+                Lead Guest Information
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+                <input type="text" name="full_name" placeholder="Full Name" class="w-full rounded-lg border p-3" required>
+
+                <input type="email" name="email" required
+                       value="{{ request.user.email }}"
+                       placeholder="Email Address"
+                       class="md:col-span-2 w-full rounded-lg border p-3">
+
+                <input type="text" name="phone" required placeholder="Phone Number"
+                       class="w-full rounded-lg border p-3">
+                       
+                <input type="number" name="guests" required placeholder="Number of Guests" min="1"
+                       class="w-full rounded-lg border p-3">
+
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Check-In Date</label>
+                        <input type="date" name="check_in" required
+                            class="w-full rounded-lg border p-3">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Check-Out Date</label>
+                        <input type="date" name="check_out" required
+                            class="w-full rounded-lg border p-3">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payment Method (UI only for now) -->
+        <section class="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                <span class="material-icons-outlined text-green-600">payments</span>
+                Payment Method
+            </h2>
+
+            <p class="text-slate-500 text-sm">
+                Payment integration coming soon. This booking will be saved as <b>Pending</b>.
+            </p>
+        </section>
+
+    </div>
+
+    <!-- RIGHT: SUMMARY -->
+    <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl border shadow-lg sticky top-24">
+
+            <div class="p-6">
+                <h3 class="text-lg font-bold mb-4">Booking Summary</h3>
+
+                <div class="relative rounded-lg overflow-hidden mb-4">
+                    {% if hotel.image %}
+                    <img src="{{ hotel.image.url }}" class="w-full h-32 object-cover">
+                    {% endif %}
+                    <div class="absolute inset-0 bg-black/60 flex flex-col justify-end p-3">
+                        <p class="text-white font-bold">{{ hotel.name }}</p>
+                        <p class="text-white/80 text-xs">
+                            {{ hotel.location }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 text-sm">
+                    <div class="flex justify-between">
+                        <span>Price per Night</span>
+                        <span>{{ hotel.price_per_night }} TK</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="flex justify-between text-lg font-bold">
+                        <span>Total</span>
+                        <span class="text-green-600">{{ hotel.price_per_night }} TK</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 border-t">
+                <button type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg">
+                    Confirm Booking
+                </button>
+
+                <p class="text-[11px] text-center text-slate-500 mt-3">
+                    By confirming, you agree to our Terms & Cancellation Policy.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</form>
+
+{% endblock %}

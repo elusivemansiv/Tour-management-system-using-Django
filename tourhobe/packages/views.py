@@ -1,7 +1,9 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Location, Package, CarouselSlide, Country
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Location, Package, Country
+from carousel.models import CarouselSlide
 from flights.models import Flight
 from hotels.models import Hotel
+from django.contrib import messages
 
 def home(request):
     locations = Location.objects.all()
@@ -71,6 +73,3 @@ def all_packages(request):
 
 def contact(request):
     return render(request, "packages/contact.html")
-
-def about(request):
-    return render(request, "packages/about.html")

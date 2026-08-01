@@ -1,1 +1,80 @@
-Developing Tour hobe a tour management system using django framework.
+# Tour Hobe ✈️🌍
+
+**Tour Hobe** is a comprehensive, modern Tour and Travel Management System built using the Django framework. It provides a beautiful, user-friendly platform for managing and booking travel packages, hotels, flights, and cabs. 
+
+Developed by [Mansib Ahsan](http://mansibahsan.netlify.app/)
+
+---
+
+## 🚀 Features
+
+- **Tour Packages:** Browse curated travel packages by country, location, and theme.
+- **Hotel Booking:** Find and book hotel rooms with detailed descriptions and image galleries.
+- **Flight Reservations:** Search for flights and view popular destinations.
+- **Cab Rentals:** Rent vehicles for your trips with detailed vehicle specifications.
+- **User Dashboard:** A personalized space for users to manage their bookings, view order history, and handle account settings.
+- **Dynamic Blog:** A built-in travel blog for sharing tips, stories, and guides.
+- **Beautiful Admin Panel:** Features a highly customized, sleek admin interface powered by `django-unfold`.
+- **Rich Text Editing:** Integrated with `django-ckeditor` for rich content management across blogs and descriptions.
+
+## 🛠️ Tech Stack
+
+- **Backend:** Python, Django 5
+- **Database:** SQLite (Development) / PostgreSQL (Supported)
+- **Frontend:** HTML5, Tailwind CSS, Alpine.js (for reactive UI elements)
+- **Static/Media Handling:** Whitenoise, Pillow
+- **Admin Theme:** Django Unfold
+
+## ⚙️ Local Development Setup
+
+To run this project locally on your machine, follow these steps:
+
+1. **Clone the repository** (if applicable) and navigate to the project directory:
+   ```bash
+   cd tourhobe
+   ```
+
+2. **Create a virtual environment** and activate it:
+   ```bash
+   python -m venv .venv
+   source .venv/Scripts/activate  # On Windows
+   ```
+
+3. **Install the dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run migrations** to set up the database:
+   ```bash
+   python manage.py migrate
+   ```
+
+5. **Create a superuser** to access the admin panel:
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+6. **Start the development server**:
+   ```bash
+   python manage.py runserver
+   ```
+
+7. **Access the application**:
+   - Main Site: `http://127.0.0.1:8000`
+   - Admin Panel: `http://127.0.0.1:8000/admin`
+
+## 📦 Deployment (cPanel)
+
+This project is fully configured for deployment on shared hosting environments like cPanel using **Setup Python App** (Passenger WSGI). 
+
+1. Ensure `passenger_wsgi.py` is present in the root.
+2. Zip the project directory (excluding `.venv` and `__pycache__`).
+3. Upload and extract to your cPanel Application Root.
+4. Install dependencies via the cPanel terminal.
+5. Run `python manage.py collectstatic --noinput`.
+6. Add `DEBUG = False` in your cPanel environment variables.
+7. Restart the Python App.
+
+---
+*Thank you for visiting! Feel free to check out my [portfolio](http://mansibahsan.netlify.app/) for more projects.*
